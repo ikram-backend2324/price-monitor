@@ -52,7 +52,7 @@
       {% for e in alerts %}
       <li class="px-5 py-3 text-sm">
         <div class="font-medium truncate"><a href="{% url 'dashboard:product_detail' e.offer.product_id %}" class="hover:underline">{{ e.offer.product.name }}</a></div>
-        <div class="text-slate-500 text-xs mt-0.5">{{ e.rule.get_kind_display }} · {{ e.offer.store.name }} · {{ e.created_at|timesince }}</div>
+        <div class="text-slate-500 text-xs mt-0.5">{{ e.rule.get_kind_display }} · {{ e.offer.store.name }} · {{ e.created_at|ago }}</div>
       </li>
       {% empty %}
       <li class="px-5 py-8 text-sm text-slate-400 text-center">{% translate "No alerts yet" %}</li>

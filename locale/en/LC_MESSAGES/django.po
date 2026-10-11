@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 23:33+0500\n"
+"POT-Creation-Date: 2026-10-11 23:53+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: apps/accounts/forms.py:10 apps/accounts/forms.py:14 apps/alerts/models.py:37
 #: templates/accounts/login.html:10
 msgid "Email"
@@ -299,6 +300,15 @@ msgstr ""
 
 #: apps/dashboard/forms.py:113 templates/dashboard/product_detail.html:76
 msgid "Check interval (min)"
+msgstr ""
+
+#: apps/dashboard/templatetags/pw.py:56
+msgid "just now"
+msgstr ""
+
+#: apps/dashboard/templatetags/pw.py:57
+#, python-format
+msgid "%(t)s ago"
 msgstr ""
 
 #: apps/dashboard/views.py:57

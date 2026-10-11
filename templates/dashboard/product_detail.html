@@ -88,7 +88,7 @@
         <td class="text-right font-medium whitespace-nowrap {% if o.last_price and o.last_price < product.my_price %}text-red-600{% endif %}">{{ o.last_price|money }}</td>
         <td class="text-right text-slate-400 line-through hidden sm:table-cell whitespace-nowrap">{{ o.last_old_price|money }}</td>
         <td>{% if o.last_in_stock is None %}<span class="badge badge-slate">?</span>{% elif o.last_in_stock %}<span class="badge badge-green">{% translate "in stock" %}</span>{% else %}<span class="badge badge-red">{% translate "out" %}</span>{% endif %}</td>
-        <td class="hidden md:table-cell text-slate-500 whitespace-nowrap">{% if o.last_checked_at %}{{ o.last_checked_at|timesince }}{% else %}—{% endif %}</td>
+        <td class="hidden md:table-cell text-slate-500 whitespace-nowrap">{% if o.last_checked_at %}{{ o.last_checked_at|ago }}{% else %}—{% endif %}</td>
         <td>
           {% if o.last_status == 'ok' %}<span class="badge badge-green">OK</span>
           {% elif o.last_status == 'new' %}<span class="badge badge-slate">{{ o.get_last_status_display }}</span>

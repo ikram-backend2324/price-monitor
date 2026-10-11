@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 23:33+0500\n"
+"POT-Creation-Date: 2026-10-11 23:53+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -305,6 +305,16 @@ msgstr "Файл CSV или Excel"
 #: apps/dashboard/forms.py:113 templates/dashboard/product_detail.html:76
 msgid "Check interval (min)"
 msgstr "Интервал проверки (мин)"
+
+#: apps/dashboard/templatetags/pw.py:56
+#| msgid "digest now"
+msgid "just now"
+msgstr "только что"
+
+#: apps/dashboard/templatetags/pw.py:57
+#, python-format
+msgid "%(t)s ago"
+msgstr "%(t)s назад"
 
 #: apps/dashboard/views.py:57
 msgid "Viewers cannot change data"

@@ -37,3 +37,6 @@
 .dark .badge-slate { background: rgb(30 41 59); color: rgb(203 213 225); }
 
 .errorlist { color: rgb(220 38 38); font-size: .8rem; margin-top: .25rem; }
+
+/* Let wide tables scroll inside cards instead of stretching grid columns on phones */
+.grid > * { min-width: 0; }

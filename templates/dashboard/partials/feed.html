@@ -1,19 +1,19 @@
 {% load i18n pw %}
 <div class="overflow-x-auto">
 <table class="table">
-  <thead><tr><th>{% translate "Product" %}</th><th>{% translate "Store" %}</th><th class="text-right">{% translate "Was" %}</th><th class="text-right">{% translate "Now" %}</th><th>{% translate "When" %}</th></tr></thead>
+  <thead><tr><th>{% translate "Product" %}</th><th class="hidden sm:table-cell">{% translate "Store" %}</th><th class="text-right hidden sm:table-cell">{% translate "Was" %}</th><th class="text-right">{% translate "Now" %}</th><th class="hidden sm:table-cell">{% translate "When" %}</th></tr></thead>
   <tbody>
   {% for row in feed %}
     {% with s=row.snap p=row.prev %}
     <tr>
-      <td class="max-w-[16rem] truncate"><a class="hover:underline" href="{% url 'dashboard:product_detail' s.offer.product_id %}">{{ s.offer.product.name }}</a></td>
-      <td class="whitespace-nowrap">{{ s.offer.store.name }}</td>
-      <td class="text-right text-slate-400 whitespace-nowrap">{{ p.price|money }}</td>
+      <td class="max-w-[11rem] sm:max-w-[16rem] truncate"><a class="hover:underline" href="{% url 'dashboard:product_detail' s.offer.product_id %}">{{ s.offer.product.name }}</a><div class="sm:hidden text-xs text-slate-400">{{ s.offer.store.name }} · {{ s.checked_at|ago }}</div></td>
+      <td class="whitespace-nowrap hidden sm:table-cell">{{ s.offer.store.name }}</td>
+      <td class="text-right text-slate-400 whitespace-nowrap hidden sm:table-cell">{{ p.price|money }}</td>
       <td class="text-right font-medium whitespace-nowrap {% if p.price and s.price < p.price %}text-emerald-600{% elif p.price and s.price > p.price %}text-red-600{% endif %}">
         {% if p.price and s.price < p.price %}▼{% elif p.price and s.price > p.price %}▲{% endif %} {{ s.price|money }}
         {% if not s.in_stock %}<span class="badge badge-slate ml-1">{% translate "out" %}</span>{% endif %}
       </td>
-      <td class="text-slate-500 whitespace-nowrap">{{ s.checked_at|timesince }}</td>
+      <td class="text-slate-500 whitespace-nowrap hidden sm:table-cell">{{ s.checked_at|ago }}</td>
     </tr>
     {% endwith %}
   {% empty %}

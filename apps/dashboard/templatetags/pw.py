@@ -1,6 +1,9 @@
 from decimal import Decimal, InvalidOperation
 
 from django import template
+from django.utils import timezone
+from django.utils.timesince import timesince
+from django.utils.translation import gettext as _
 
 register = template.Library()
 
@@ -42,3 +45,13 @@ def rate(value):
     if value is None:
         return "—"
     return f"{value * 100:.0f}%"
+
+
+@register.filter
+def ago(value):
+    """'just now' for the last minute, otherwise Django's timesince."""
+    if not value:
+        return "—"
+    if (timezone.now() - value).total_seconds() < 60:
+        return _("just now")
+    return _("%(t)s ago") % {"t": timesince(value)}

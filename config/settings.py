@@ -19,7 +19,8 @@ env = environ.Env(
     CSRF_TRUSTED_ORIGINS=(list, []),
     PROXY_URLS=(list, []),
 )
-environ.Env.read_env(BASE_DIR / ".env", overwrite=False)
+# ENV_FILE lets local (non-Docker) runs use e.g. .env.local; real environment variables always win.
+environ.Env.read_env(BASE_DIR / env.str("ENV_FILE", default=".env"), overwrite=False)
 
 SECRET_KEY = env("SECRET_KEY", default="dev-insecure-change-me")
 DEBUG = env("DEBUG")
