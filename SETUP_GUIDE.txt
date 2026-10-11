@@ -1,0 +1,305 @@
+==============================================================================
+ PRICEWATCH — EVERYTHING YOU NEED TO RUN THE PROJECT
+==============================================================================
+
+Project folder: D:\start-up\price-monitor
+More detail:    docs\RUN.md (running), docs\DATA.md (.env & keys),
+                docs\PRODUCTION.md (server), docs\BUSINESS.md (selling)
+
+
+------------------------------------------------------------------------------
+ 1. WHAT TO INSTALL (one time)
+------------------------------------------------------------------------------
+
+ Windows 10/11:
+   a) WSL2 — open PowerShell AS ADMINISTRATOR and run:
+          wsl --install
+      then reboot.  (On this PC WSL2 + Ubuntu is already installed.)
+   b) Docker Desktop — https://www.docker.com/products/docker-desktop/
+      Install with "Use WSL 2" checked. Start it and wait for "Engine running".
+      Settings -> Resources: give Docker at least 4 GB RAM.
+   c) Git — https://git-scm.com/download/win
+
+ Linux (Ubuntu):   curl -fsSL https://get.docker.com | sh
+                   sudo usermod -aG docker $USER      (log out / in)
+                   sudo apt install -y git
+ macOS:            Docker Desktop + "xcode-select --install" for git
+
+ Check:   docker --version      docker compose version      git --version
+
+ Python is NOT required to run the project with Docker.
+ (Only for development/tests: Python 3.10+ — see section 9.)
+
+
+------------------------------------------------------------------------------
+ 2. QUICK START (demo in 3 commands)
+------------------------------------------------------------------------------
+
+   cd D:\start-up\price-monitor
+   copy .env.example .env                 (Linux/macOS: cp .env.example .env)
+   docker compose up -d --build           (first time: 5-10 min)
+   docker compose exec web python manage.py seed_demo
+
+ NOTE: a working .env already exists in the project folder on this PC
+       (with a random SECRET_KEY), so you can skip the "copy" step here.
+
+ Open:
+   Dashboard ........ http://localhost            (or http://localhost:8000)
+   Login ............ demo@pricewatch.local  /  demo12345
+   Admin panel ...... http://localhost/admin/     admin@pricewatch.local / demo12345
+   API docs ......... http://localhost/api/docs/
+   Demo shop ........ http://localhost:8001/?shop=techbozor  (also megasavdo, smartmarket)
+
+ Check that everything is healthy:
+   docker compose ps          -> all 10 services must show "(healthy)"
+
+ Within 2-5 minutes the demo shop changes prices -> new price changes appear
+ on the dashboard and new alerts in "Alerts".
+
+ Stop:            docker compose down
+ Stop + wipe DB:  docker compose down -v
+ Recreate demo:   docker compose exec web python manage.py seed_demo --reset
+
+
+------------------------------------------------------------------------------
+ 3. THE .env FILE — WHAT EVERY VARIABLE MEANS
+------------------------------------------------------------------------------
+
+ After editing .env always run:   docker compose up -d
+ (containers read .env only at start)
+
+ --- REQUIRED ---------------------------------------------------------------
+
+ SECRET_KEY        Random secret for Django sessions. Generate:
+                     python -c "import secrets; print(secrets.token_urlsafe(50))"
+                   or  openssl rand -base64 48
+                   Never share it, never commit it to git.
+
+ DEBUG             True on your PC, False on a real server.
+
+ ALLOWED_HOSTS     Comma-separated domains: localhost,127.0.0.1,web
+                   On a server: pricewatch.uz,www.pricewatch.uz
+
+ SITE_URL          Public address of the dashboard (used in Telegram buttons):
+                   http://localhost:8000   or   https://pricewatch.uz
+
+ POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD
+                   Database credentials for the "db" container. Keep "pricewatch"
+                   locally; on a server use a long random password.
+ DATABASE_URL      postgres://USER:PASSWORD@db:5432/DBNAME  (same values as above)
+ REDIS_URL         redis://redis:6379/0        (leave as is)
+ CELERY_BROKER_URL redis://redis:6379/1        (leave as is)
+
+ --- DEMO ------------------------------------------------------------------
+
+ DEMO_USER_PASSWORD         Password of demo@ and admin@ users created by
+                            seed_demo (default demo12345 — change on a server!)
+ DEMO_SHOP_CHANGE_INTERVAL  Seconds between price changes in the demo shop (120)
+
+ --- TELEGRAM (optional, but this is the main feature) ----------------------
+
+ Without a token the system still works: alerts are only written to the log.
+
+ TELEGRAM_BOT_TOKEN  How to get it (2 minutes):
+                       1. In Telegram open @BotFather (blue check mark)
+                       2. Send /newbot
+                       3. Type a display name, e.g.  PriceWatch Uzbekistan
+                       4. Type a username ending in "bot", e.g.  pricewatch_uz_bot
+                       5. BotFather replies with a token like
+                            1234567890:AAH-xxxxxxxxxxxxxxxxxxxxxxxx
+                          -> paste it here.
+                     If the token leaks: /revoke in @BotFather, paste the new one.
+
+ TELEGRAM_BOT_USERNAME  The username without @, e.g.  pricewatch_uz_bot
+
+ ADMIN_TELEGRAM_CHAT_ID Your personal chat id — you receive "scraper broken"
+                        (SCRAPER_DEGRADED) warnings. How to get it:
+                          - open @userinfobot in Telegram, it replies "Id: 123456789"
+                          OR
+                          - send any message to YOUR bot, then open in a browser:
+                            https://api.telegram.org/bot<TOKEN>/getUpdates
+                            and find  "chat":{"id":123456789
+                        Also send /start to your bot once, otherwise it cannot
+                        write to you.
+
+ BOT_MODE            polling (default, works everywhere) or webhook
+ BOT_WEBHOOK_URL     only for webhook mode, e.g. https://pricewatch.uz/tg/webhook
+ BOT_WEBHOOK_SECRET  only for webhook mode, any random string
+
+ How to connect your Telegram to your account after setting the token:
+   docker compose up -d
+   Dashboard -> "Telegram" page -> you see a code -> send  /start CODE  to the bot
+   Try:  /products   /check PH-SAM-A55   /report   /lang
+
+ --- SCRAPING ----------------------------------------------------------------
+
+ PROXY_URLS          Empty = no proxies (fine to start). Comma-separated list:
+                       http://user:pass@1.2.3.4:8000,http://user:pass@5.6.7.8:8000
+                     Needed only if a shop starts blocking your server (403/429).
+                     Prices (2026, approx.):
+                       datacenter proxies   $1-3 per IP / month
+                       residential proxies  $3-8 per GB of traffic
+                       mobile (UZ)          $40-100 per port / month
+                     Prefer providers with IPs in Uzbekistan / CIS.
+ SCRAPER_TIMEOUT        20      seconds per request
+ SCRAPER_MAX_RETRIES    3
+ SCRAPER_RESPECT_ROBOTS True    (keep True — legal/ethical requirement)
+
+ --- MONITORING (optional) ---------------------------------------------------
+
+ SENTRY_DSN          Error tracking. How to get it (free plan):
+                       1. Sign up at https://sentry.io
+                       2. Create Project -> platform "Django" -> name "pricewatch"
+                       3. Settings -> Projects -> pricewatch -> Client Keys (DSN)
+                       4. Copy the DSN (https://...@o123.ingest.sentry.io/456)
+ SENTRY_ENVIRONMENT  production
+ LOG_LEVEL           INFO
+
+ --- E-MAIL (optional; by default e-mails are printed to the log) -----------
+
+ EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+ EMAIL_HOST=smtp.gmail.com
+ EMAIL_PORT=587
+ EMAIL_HOST_USER=you@gmail.com
+ EMAIL_HOST_PASSWORD=<Gmail "App password": Google Account -> Security ->
+                      2-Step Verification -> App passwords>
+ EMAIL_USE_TLS=True
+ DEFAULT_FROM_EMAIL=PriceWatch <you@gmail.com>
+
+ --- PRODUCTION ONLY ---------------------------------------------------------
+
+ DOMAIN              pricewatch.uz   (DNS "A" record must point to the server IP)
+ ACME_EMAIL          your e-mail for the free Let's Encrypt HTTPS certificate
+ CSRF_TRUSTED_ORIGINS https://pricewatch.uz
+ ADMIN_URL           hide the admin, e.g.  control-7f3a9/
+
+
+------------------------------------------------------------------------------
+ 4. EXAMPLE .env FOR YOUR PC (copy and adjust)
+------------------------------------------------------------------------------
+
+SECRET_KEY=PASTE-GENERATED-KEY-HERE
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1,web
+CSRF_TRUSTED_ORIGINS=http://localhost,http://localhost:8000
+SITE_URL=http://localhost:8000
+TIME_ZONE=Asia/Tashkent
+ADMIN_URL=admin/
+POSTGRES_DB=pricewatch
+POSTGRES_USER=pricewatch
+POSTGRES_PASSWORD=pricewatch
+DATABASE_URL=postgres://pricewatch:pricewatch@db:5432/pricewatch
+REDIS_URL=redis://redis:6379/0
+CELERY_BROKER_URL=redis://redis:6379/1
+DEMO_USER_PASSWORD=demo12345
+DEMO_SHOP_CHANGE_INTERVAL=120
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_BOT_USERNAME=
+ADMIN_TELEGRAM_CHAT_ID=
+BOT_MODE=polling
+PROXY_URLS=
+SENTRY_DSN=
+
+
+------------------------------------------------------------------------------
+ 5. USEFUL COMMANDS
+------------------------------------------------------------------------------
+
+ Status ............... docker compose ps
+ Logs ................. docker compose logs -f web
+                        docker compose logs -f worker-fast       (scraping)
+                        docker compose logs -f worker-browser    (Uzum/Playwright)
+                        docker compose logs -f worker-default    (scheduler, alerts)
+                        docker compose logs -f bot
+ Is Celery alive? ..... docker compose exec worker-default celery -A config inspect ping
+ Create admin user .... docker compose exec web python manage.py createsuperuser
+ Restart after .env ... docker compose up -d
+ Rebuild after code ... docker compose up -d --build
+
+
+------------------------------------------------------------------------------
+ 6. YOUR CLIENT'S DATA (what you need from a business)
+------------------------------------------------------------------------------
+
+ Dashboard -> "Import / export" -> download the Excel template. Columns:
+   sku          product code (unique)                    REQUIRED
+   name         product name                              REQUIRED
+   my_price     client's current price, UZS               REQUIRED
+   cost_price   purchase cost (for minimum margin)        recommended
+   category     e.g. TV, Smartphones                      optional
+   url_1..url_3 links to THE SAME product at competitors  REQUIRED
+                (Uzum: https://uzum.uz/ru/product/...-1234567)
+
+ Start with the 20-50 best-selling products and 3 main competitors.
+ Time: ~1 hour for 20 products x 3 competitors; 4-6 hours for 100 products.
+ Tip: search competitors by exact model code (e.g. SM-A556E).
+
+
+------------------------------------------------------------------------------
+ 7. ADD A NEW SHOP WITHOUT CODE
+------------------------------------------------------------------------------
+
+ 1. Just add a product link in the dashboard — the shop is created
+    automatically with the universal JSON-LD adapter (works on many shops).
+ 2. If its status becomes "Failed": Admin -> Stores -> that shop:
+      Adapter = "CSS selectors", Price selector = e.g. .product-price
+      (right-click the price in Chrome -> Inspect, take a stable class)
+ 3. Click "Test selectors on URL" in the Stores list -> paste a product link
+    -> "Fetch & extract" shows price / old price / stock / title.
+
+
+------------------------------------------------------------------------------
+ 8. COMMON PROBLEMS
+------------------------------------------------------------------------------
+
+ "port is already allocated" (80, 8000 or 8001)
+     Another program uses the port. In docker-compose.yml change "80:80" to
+     "8080:80" and open http://localhost:8080.
+ "failed to connect to the docker API"
+     Docker Desktop is not running — start it, wait for "Engine running".
+ Bot does not answer
+     docker compose logs bot. "TELEGRAM_BOT_TOKEN is empty" -> set the token,
+     docker compose up -d. The same token must not run on two computers.
+ "Code is invalid or expired"
+     Codes live 15 minutes — click "New code" on the Telegram page.
+ worker-browser crashes / out of memory
+     Give Docker more RAM (Settings -> Resources, 4 GB+).
+ Nothing changes on the dashboard
+     docker compose logs worker-default | findstr Queued   (Linux: grep)
+     and make sure the demo-shop container is healthy.
+
+
+------------------------------------------------------------------------------
+ 9. DEVELOPMENT / TESTS (optional, needs Python 3.10+)
+------------------------------------------------------------------------------
+
+   python -m venv .venv
+   .venv\Scripts\activate                (Linux/macOS: source .venv/bin/activate)
+   pip install -r requirements-dev.txt
+   (a ready .env.local for local runs already exists on this PC)
+   PowerShell:  $env:ENV_FILE=".env.local"; pytest --cov
+   bash:        ENV_FILE=.env.local pytest --cov
+   ruff check .        mypy apps bot
+
+ Results on this PC: 217 tests passed, 90% coverage, ruff and mypy clean.
+
+
+------------------------------------------------------------------------------
+ 10. PUTTING IT ON A REAL SERVER (short version — full guide: docs\PRODUCTION.md)
+------------------------------------------------------------------------------
+
+ 1. Rent a VPS: minimum 2 vCPU / 4 GB RAM (recommended 4 vCPU / 8 GB),
+    Ubuntu 24.04 (Hetzner CX32 ~ EUR 8/month, or a local UZ provider).
+ 2. Buy a domain, create DNS A records  pricewatch.uz -> server IP.
+ 3. On the server: install Docker, git clone the project to /opt/pricewatch,
+    cp .env.example .env and set: DEBUG=False, strong SECRET_KEY and
+    POSTGRES_PASSWORD (+ DATABASE_URL), DOMAIN, ACME_EMAIL, ALLOWED_HOSTS,
+    CSRF_TRUSTED_ORIGINS, SITE_URL, TELEGRAM_*, SENTRY_DSN.
+ 4. docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+    (HTTPS certificate is obtained automatically by Caddy)
+ 5. docker compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py createsuperuser
+ 6. Daily backups:  crontab -e  ->
+      15 3 * * * cd /opt/pricewatch && ./scripts/backup.sh >> backups/backup.log 2>&1
+    Test a restore monthly:  ./scripts/restore_check.sh backups/<file>.sql.gz
+ 7. Uptime monitoring: UptimeRobot (free) on https://pricewatch.uz/health/
+==============================================================================
