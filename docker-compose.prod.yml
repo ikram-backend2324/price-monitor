@@ -1,0 +1,82 @@
+# Production override:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# - DEBUG off, no published DB/Redis/web ports, Caddy for automatic HTTPS
+# - demo-shop disabled (enable with: --profile demo)
+
+x-prod: &prod
+  restart: always
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "5"
+
+services:
+  web:
+    <<: *prod
+    ports: !reset []
+    environment:
+      RUN_MIGRATIONS: "1"
+      DEBUG: "False"
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS:-4} --timeout 60 --max-requests 1000 --max-requests-jitter 100 --access-logfile -
+
+  worker-fast:
+    <<: *prod
+    environment:
+      DEBUG: "False"
+  worker-browser:
+    <<: *prod
+    environment:
+      DEBUG: "False"
+  worker-default:
+    <<: *prod
+    environment:
+      DEBUG: "False"
+  beat:
+    <<: *prod
+    environment:
+      DEBUG: "False"
+  bot:
+    <<: *prod
+    environment:
+      DEBUG: "False"
+  db:
+    <<: *prod
+  redis:
+    <<: *prod
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy noeviction
+
+  nginx:
+    <<: *prod
+    ports: !reset []
+    expose:
+      - "80"
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: always
+    depends_on:
+      - nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env}
+    volumes:
+      - ./nginx/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  demo-shop:
+    profiles: ["demo"]
+    ports: !reset []
+
+volumes:
+  caddy_data:
+  caddy_config:

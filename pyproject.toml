@@ -1,0 +1,75 @@
+[project]
+name = "pricewatch"
+version = "1.0.0"
+description = "Competitor price monitoring SaaS for Uzbekistan marketplaces and online shops"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["apps", "bot", "demo_shop", "config"]
+omit = ["*/migrations/*", "*/tests/*", "config/asgi.py", "config/wsgi.py", "manage.py"]
+
+[tool.coverage.report]
+show_missing = false
+skip_covered = true
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError", "if __name__ == .__main__.:"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["*/migrations/*", ".venv", "staticfiles"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ", "N", "S", "SIM", "C4"]
+ignore = [
+    "S101",   # assert in tests
+    "S311",   # random is fine for jitter / demo data
+    "S105",   # false positives on 'token'/'password' names
+    "S106",
+    "B008",
+    "DJ001",  # null=True on CharField is intentional in a couple of places
+    "N806",
+    "SIM108",
+    "SIM102",  # nested ifs mirror the alert-rule structure
+    "N818",   # exception names read better without the Error suffix here
+    "S104",   # binding to 0.0.0.0 inside containers is intended
+    "S108",   # /tmp heartbeat file inside the bot container
+    "S603", "S607",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "B", "N", "E501"]
+"bot/main.py" = ["E402"]
+# long literals: user-agent strings, bot texts, inline CSS of the demo shop
+"apps/scraping/http.py" = ["E501"]
+"bot/texts.py" = ["E501"]
+"demo_shop/main.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config", "bot", "demo_shop"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+check_untyped_defs = false
+disallow_untyped_defs = false
+warn_unused_ignores = false
+plugins = ["mypy_django_plugin.main"]
+exclude = ["migrations/", "tests/", ".venv/"]
+
+[[tool.mypy.overrides]]
+# aiogram types are Optional everywhere; router filters guarantee the values in handlers.
+module = "bot.main"
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings"

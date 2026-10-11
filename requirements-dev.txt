@@ -1,0 +1,12 @@
+-r requirements.txt
+-r demo_shop/requirements.txt
+pytest==8.4.2
+pytest-django==4.11.1
+pytest-cov==7.0.0
+factory_boy==3.3.3
+respx==0.22.0
+ruff==0.13.3
+mypy==1.18.2
+django-stubs==5.2.5
+pre-commit==4.3.0
+polib==1.2.0
