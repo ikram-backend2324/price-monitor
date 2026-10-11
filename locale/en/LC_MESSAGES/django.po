@@ -1,0 +1,1404 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 23:33+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: apps/accounts/forms.py:10 apps/accounts/forms.py:14 apps/alerts/models.py:37
+#: templates/accounts/login.html:10
+msgid "Email"
+msgstr ""
+
+#: apps/accounts/forms.py:15 apps/accounts/forms.py:31
+#: templates/accounts/login.html:14
+msgid "Password"
+msgstr ""
+
+#: apps/accounts/forms.py:16 templates/accounts/create_org.html:7
+msgid "Company name"
+msgstr ""
+
+#: apps/accounts/forms.py:21
+msgid "A user with this email already exists."
+msgstr ""
+
+#: apps/accounts/models.py:41
+msgid "email"
+msgstr ""
+
+#: apps/accounts/models.py:58 apps/alerts/models.py:28
+#: apps/catalog/models.py:36 apps/catalog/models.py:88
+#: apps/catalog/models.py:104 apps/pricing/models.py:71
+msgid "name"
+msgstr ""
+
+#: apps/accounts/models.py:61
+msgid "digest time"
+msgstr ""
+
+#: apps/accounts/models.py:62
+msgid "send morning digest"
+msgstr ""
+
+#: apps/accounts/models.py:79
+msgid "Owner"
+msgstr ""
+
+#: apps/accounts/models.py:80
+msgid "Manager"
+msgstr ""
+
+#: apps/accounts/models.py:81
+msgid "Viewer"
+msgstr ""
+
+#: apps/accounts/views.py:34
+msgid "Welcome! Your 14-day trial has started."
+msgstr ""
+
+#: apps/accounts/views.py:49
+msgid "Choose a password of at least 8 characters."
+msgstr ""
+
+#: apps/accounts/views.py:54
+#, python-format
+msgid "Please log in as %(email)s to accept the invitation."
+msgstr ""
+
+#: apps/alerts/models.py:16
+msgid "Competitor dropped price by ≥ X%"
+msgstr ""
+
+#: apps/alerts/models.py:17
+msgid "Competitor became cheaper than me"
+msgstr ""
+
+#: apps/alerts/models.py:18
+msgid "Competitor ran out of stock"
+msgstr ""
+
+#: apps/alerts/models.py:19
+msgid "Competitor is back in stock"
+msgstr ""
+
+#: apps/alerts/models.py:20
+msgid "Any price change"
+msgstr ""
+
+#: apps/alerts/models.py:23 apps/pricing/models.py:66
+msgid "All products"
+msgstr ""
+
+#: apps/alerts/models.py:24 apps/pricing/models.py:67
+#: apps/reports/exporting.py:54
+#: templates/dashboard/partials/product_rows.html:6
+msgid "Category"
+msgstr ""
+
+#: apps/alerts/models.py:25 apps/pricing/models.py:68
+#: apps/reports/exporting.py:53 templates/dashboard/alerts.html:47
+#: templates/dashboard/health.html:30 templates/dashboard/partials/feed.html:4
+#: templates/dashboard/partials/product_rows.html:6
+#: templates/dashboard/products.html:22
+msgid "Product"
+msgstr ""
+
+#: apps/alerts/models.py:29
+msgid "type"
+msgstr ""
+
+#: apps/alerts/models.py:31
+msgid "threshold"
+msgstr ""
+
+#: apps/alerts/models.py:31
+msgid "Percent for price drop rules"
+msgstr ""
+
+#: apps/alerts/models.py:33 apps/pricing/models.py:77
+msgid "scope"
+msgstr ""
+
+#: apps/alerts/models.py:36
+msgid "Telegram"
+msgstr ""
+
+#: apps/alerts/models.py:38 apps/pricing/models.py:80
+msgid "active"
+msgstr ""
+
+#: apps/alerts/models.py:60
+msgid "Log only (no channel configured)"
+msgstr ""
+
+#: apps/alerts/services.py:104
+#, python-format
+msgid "%(store)s: %(old)s → %(new)s (−%(pct)s%%)"
+msgstr ""
+
+#: apps/alerts/services.py:111
+#, python-format
+msgid "%(store)s: %(old)s → %(new)s"
+msgstr ""
+
+#: apps/alerts/services.py:117
+#, python-format
+msgid "%(store)s is cheaper than you: %(new)s vs your %(mine)s"
+msgstr ""
+
+#: apps/alerts/services.py:123
+#, python-format
+msgid "%(store)s: out of stock"
+msgstr ""
+
+#: apps/alerts/services.py:125
+#, python-format
+msgid "%(store)s: back in stock at %(new)s"
+msgstr ""
+
+#: apps/alerts/services.py:134
+#, python-format
+msgid "Your price: %(p)s"
+msgstr ""
+
+#: apps/alerts/services.py:138 apps/alerts/services.py:140
+msgid "Open product"
+msgstr ""
+
+#: apps/alerts/services.py:143
+#, python-format
+msgid "Recommended: %(p)s"
+msgstr ""
+
+#: apps/alerts/services.py:147
+#, python-format
+msgid "Apply %(p)s"
+msgstr ""
+
+#: apps/alerts/services.py:152
+msgid "Mute this alert"
+msgstr ""
+
+#: apps/billing/models.py:34
+msgid "Trial"
+msgstr ""
+
+#: apps/billing/models.py:35
+msgid "Active"
+msgstr ""
+
+#: apps/billing/models.py:36
+msgid "Expired"
+msgstr ""
+
+#: apps/billing/models.py:37 apps/billing/models.py:68
+msgid "Cancelled"
+msgstr ""
+
+#: apps/billing/models.py:65
+msgid "Pending"
+msgstr ""
+
+#: apps/billing/models.py:66
+msgid "Paid"
+msgstr ""
+
+#: apps/billing/models.py:67 apps/catalog/models.py:163
+#: apps/scraping/models.py:11
+msgid "Failed"
+msgstr ""
+
+#: apps/billing/services.py:76
+#, python-format
+msgid ""
+"Your plan %(plan)s allows %(max)d tracked links (used %(used)d). Upgrade to "
+"add more."
+msgstr ""
+
+#: apps/billing/services.py:86
+#, python-format
+msgid "Your plan allows %(max)d team members. Upgrade to invite more."
+msgstr ""
+
+#: apps/catalog/models.py:32 apps/catalog/models.py:162
+msgid "OK"
+msgstr ""
+
+#: apps/catalog/models.py:33 templates/dashboard/health.html:14
+msgid "Degraded"
+msgstr ""
+
+#: apps/catalog/models.py:34 templates/dashboard/health.html:14
+msgid "Unknown"
+msgstr ""
+
+#: apps/catalog/models.py:37
+msgid "domain"
+msgstr ""
+
+#: apps/catalog/models.py:41
+msgid "requires browser"
+msgstr ""
+
+#: apps/catalog/models.py:106
+msgid "my price"
+msgstr ""
+
+#: apps/catalog/models.py:107
+msgid "cost price"
+msgstr ""
+
+#: apps/catalog/models.py:161
+msgid "New"
+msgstr ""
+
+#: apps/catalog/models.py:164 apps/scraping/models.py:12
+msgid "Blocked by robots.txt"
+msgstr ""
+
+#: apps/catalog/models.py:165
+msgid "Suspicious, re-checking"
+msgstr ""
+
+#: apps/catalog/models.py:172
+msgid "check interval (min)"
+msgstr ""
+
+#: apps/dashboard/forms.py:39
+msgid "…or new category"
+msgstr ""
+
+#: apps/dashboard/forms.py:51
+msgid "A product with this SKU already exists."
+msgstr ""
+
+#: apps/dashboard/forms.py:80
+msgid "Choose a category"
+msgstr ""
+
+#: apps/dashboard/forms.py:82
+msgid "Choose a product"
+msgstr ""
+
+#: apps/dashboard/forms.py:112
+msgid "CSV or Excel file"
+msgstr ""
+
+#: apps/dashboard/forms.py:113 templates/dashboard/product_detail.html:76
+msgid "Check interval (min)"
+msgstr ""
+
+#: apps/dashboard/views.py:57
+msgid "Viewers cannot change data"
+msgstr ""
+
+#: apps/dashboard/views.py:68
+msgid "Only the owner can do this"
+msgstr ""
+
+#: apps/dashboard/views.py:241 apps/reports/exporting.py:55
+#: templates/dashboard/partials/product_rows.html:7
+#: templates/dashboard/product_detail.html:27
+msgid "My price"
+msgstr ""
+
+#: apps/dashboard/views.py:250
+msgid "Product created. Now add competitor links."
+msgstr ""
+
+#: apps/dashboard/views.py:252
+msgid "New product"
+msgstr ""
+
+#: apps/dashboard/views.py:264
+msgid "Saved"
+msgstr ""
+
+#: apps/dashboard/views.py:274
+msgid "Product deleted"
+msgstr ""
+
+#: apps/dashboard/views.py:288
+#, python-format
+msgid "Price updated to %(p)s"
+msgstr ""
+
+#: apps/dashboard/views.py:299
+#, python-format
+msgid "Queued %(n)d checks — refresh in a minute."
+msgstr ""
+
+#: apps/dashboard/views.py:320
+msgid "This link is already tracked"
+msgstr ""
+
+#: apps/dashboard/views.py:330
+#, python-format
+msgid "Link added: %(store)s. First check is queued."
+msgstr ""
+
+#: apps/dashboard/views.py:332
+#, python-format
+msgid "Invalid link: %(e)s"
+msgstr ""
+
+#: apps/dashboard/views.py:372
+#, python-format
+msgid "Could not read file: %(e)s"
+msgstr ""
+
+#: apps/dashboard/views.py:401
+msgid "Excel reports are available on the Business plan. CSV export is free."
+msgstr ""
+
+#: apps/dashboard/views.py:427
+msgid "Alert rule added"
+msgstr ""
+
+#: apps/dashboard/views.py:467
+msgid "Pricing rule added"
+msgstr ""
+
+#: apps/dashboard/views.py:594
+#, python-format
+msgid "Invitation to %(org)s on PriceWatch"
+msgstr ""
+
+#: apps/dashboard/views.py:595
+#, python-format
+msgid "You have been invited. Accept: %(url)s"
+msgstr ""
+
+#: apps/dashboard/views.py:600
+msgid "Invitation created. Send the link to your colleague."
+msgstr ""
+
+#: apps/dashboard/views.py:619
+msgid "The owner cannot be removed"
+msgstr ""
+
+#: apps/dashboard/views.py:636
+msgid "Settings saved"
+msgstr ""
+
+#: apps/pricing/models.py:26
+msgid "Initial"
+msgstr ""
+
+#: apps/pricing/models.py:27
+msgid "Change"
+msgstr ""
+
+#: apps/pricing/models.py:28
+msgid "Daily control"
+msgstr ""
+
+#: apps/pricing/models.py:60
+msgid "Undercut the cheapest competitor by an amount"
+msgstr ""
+
+#: apps/pricing/models.py:61
+msgid "Undercut the cheapest competitor by a percent"
+msgstr ""
+
+#: apps/pricing/models.py:62
+msgid "Match the cheapest competitor"
+msgstr ""
+
+#: apps/pricing/models.py:63
+msgid "Market average"
+msgstr ""
+
+#: apps/pricing/models.py:72
+msgid "strategy"
+msgstr ""
+
+#: apps/pricing/models.py:73
+msgid "amount (UZS)"
+msgstr ""
+
+#: apps/pricing/models.py:74
+msgid "percent"
+msgstr ""
+
+#: apps/pricing/models.py:75
+msgid "min margin %"
+msgstr ""
+
+#: apps/pricing/models.py:76
+msgid "round to (UZS)"
+msgstr ""
+
+#: apps/pricing/services.py:67
+msgid "No in-stock competitor prices yet — nothing to recommend."
+msgstr ""
+
+#: apps/pricing/services.py:72
+#, python-format
+msgid "Competitors in stock: %(n)d, cheapest %(min)s, average %(avg)s"
+msgstr ""
+
+#: apps/pricing/services.py:79
+#, python-format
+msgid "Strategy: cheapest − %(a)s = %(c)s"
+msgstr ""
+
+#: apps/pricing/services.py:83
+#, python-format
+msgid "Strategy: cheapest − %(p)s%% = %(c)s"
+msgstr ""
+
+#: apps/pricing/services.py:87
+#, python-format
+msgid "Strategy: match the cheapest = %(c)s"
+msgstr ""
+
+#: apps/pricing/services.py:91
+#, python-format
+msgid "Strategy: market average = %(c)s"
+msgstr ""
+
+#: apps/pricing/services.py:96
+#, python-format
+msgid "Rounded to %(step)s: %(p)s"
+msgstr ""
+
+#: apps/pricing/services.py:105
+#, python-format
+msgid "Below minimum margin %(m)s%% (floor %(f)s) — raised to the floor."
+msgstr ""
+
+#: apps/pricing/services.py:111
+#, python-format
+msgid "Margin check passed (floor %(f)s at %(m)s%% margin)."
+msgstr ""
+
+#: apps/pricing/services.py:115
+msgid "Cost price is not set — margin is not checked."
+msgstr ""
+
+#: apps/pricing/services.py:118
+#, python-format
+msgid "Recommended price: %(p)s"
+msgstr ""
+
+#: apps/reports/digest.py:81
+#, python-format
+msgid "Morning digest — %(org)s"
+msgstr ""
+
+#: apps/reports/digest.py:82
+#, python-format
+msgid "Tracked products: %(n)d"
+msgstr ""
+
+#: apps/reports/digest.py:84
+#, python-format
+msgid "Price changes in 24h: %(n)d"
+msgstr ""
+
+#: apps/reports/digest.py:90
+#, python-format
+msgid "…and %(n)d more"
+msgstr ""
+
+#: apps/reports/digest.py:91
+#, python-format
+msgid "Where I'm more expensive: %(n)d"
+msgstr ""
+
+#: apps/reports/digest.py:94
+#, python-format
+msgid "Out of stock at competitors: %(n)d"
+msgstr ""
+
+#: apps/reports/exporting.py:56
+msgid "Cost price"
+msgstr ""
+
+#: apps/reports/exporting.py:57
+#: templates/dashboard/partials/product_rows.html:7
+msgid "Market min"
+msgstr ""
+
+#: apps/reports/exporting.py:58
+msgid "Market avg"
+msgstr ""
+
+#: apps/reports/exporting.py:59
+msgid "Diff vs min, %"
+msgstr ""
+
+#: apps/reports/exporting.py:60
+msgid "Recommended"
+msgstr ""
+
+#: apps/reports/exporting.py:98
+msgid "Prices"
+msgstr ""
+
+#: apps/reports/exporting.py:129
+msgid "About"
+msgstr ""
+
+#: apps/reports/exporting.py:130 templates/dashboard/settings.html:9
+msgid "Organization"
+msgstr ""
+
+#: apps/reports/exporting.py:131
+msgid "Generated"
+msgstr ""
+
+#: apps/reports/exporting.py:132 templates/base.html:38
+#: templates/dashboard/product_detail.html:4
+#: templates/dashboard/products.html:3 templates/dashboard/products.html:4
+msgid "Products"
+msgstr ""
+
+#: apps/reports/exporting.py:133
+msgid "Legend"
+msgstr ""
+
+#: apps/reports/exporting.py:133
+msgid "Red = my price is above the cheapest competitor"
+msgstr ""
+
+#: apps/reports/importing.py:109
+msgid "SKU and name are required"
+msgstr ""
+
+#: apps/reports/importing.py:114
+#, python-format
+msgid "Invalid my_price: %(v)s"
+msgstr ""
+
+#: apps/reports/importing.py:124
+#, python-format
+msgid "Invalid URL: %(v)s"
+msgstr ""
+
+#: apps/scraping/models.py:9
+msgid "Success"
+msgstr ""
+
+#: apps/scraping/models.py:10
+msgid "Unchanged"
+msgstr ""
+
+#: apps/scraping/models.py:13
+msgid "Rate limited"
+msgstr ""
+
+#: apps/scraping/models.py:14
+msgid "Suspicious value"
+msgstr ""
+
+#: apps/scraping/models.py:39
+msgid "Scraper degraded"
+msgstr ""
+
+#: apps/scraping/models.py:40
+msgid "Scraper recovered"
+msgstr ""
+
+#: apps/scraping/models.py:41
+msgid "Link keeps failing"
+msgstr ""
+
+#: config/settings.py:119
+msgid "Russian"
+msgstr ""
+
+#: config/settings.py:119
+msgid "Uzbek"
+msgstr ""
+
+#: config/settings.py:119
+msgid "English"
+msgstr ""
+
+#: templates/accounts/create_org.html:3
+msgid "Create organization"
+msgstr ""
+
+#: templates/accounts/create_org.html:5
+msgid "Create your organization"
+msgstr ""
+
+#: templates/accounts/create_org.html:8
+msgid "Create"
+msgstr ""
+
+#: templates/accounts/invite_accept.html:3
+msgid "Invitation"
+msgstr ""
+
+#: templates/accounts/invite_accept.html:5
+#, python-format
+msgid "Join %(org)s"
+msgstr ""
+
+#: templates/accounts/invite_accept.html:10
+msgid "Choose a password"
+msgstr ""
+
+#: templates/accounts/invite_accept.html:15
+msgid "Accept invitation"
+msgstr ""
+
+#: templates/accounts/invite_invalid.html:4
+msgid "Invitation expired"
+msgstr ""
+
+#: templates/accounts/invite_invalid.html:5
+msgid "Ask the organization owner to send a new invitation."
+msgstr ""
+
+#: templates/accounts/login.html:3 templates/accounts/login.html:5
+#: templates/accounts/login.html:18 templates/accounts/signup.html:17
+msgid "Log in"
+msgstr ""
+
+#: templates/accounts/login.html:6
+msgid "Competitor price monitoring for Uzum sellers and online shops."
+msgstr ""
+
+#: templates/accounts/login.html:20
+msgid "No account?"
+msgstr ""
+
+#: templates/accounts/login.html:20 templates/accounts/signup.html:5
+msgid "Start a free 14-day trial"
+msgstr ""
+
+#: templates/accounts/signup.html:3
+msgid "Sign up"
+msgstr ""
+
+#: templates/accounts/signup.html:6
+msgid "No card required. Up to 20 competitor links."
+msgstr ""
+
+#: templates/accounts/signup.html:15
+msgid "Create account"
+msgstr ""
+
+#: templates/accounts/signup.html:17
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/base.html:37 templates/dashboard/home.html:3
+#: templates/dashboard/home.html:4
+msgid "Dashboard"
+msgstr ""
+
+#: templates/base.html:39 templates/dashboard/alerts.html:3
+#: templates/dashboard/alerts.html:4
+msgid "Alerts"
+msgstr ""
+
+#: templates/base.html:40 templates/dashboard/pricing.html:3
+#: templates/dashboard/pricing.html:4
+msgid "Pricing rules"
+msgstr ""
+
+#: templates/base.html:41 templates/dashboard/import.html:3
+#: templates/dashboard/import.html:4
+msgid "Import / export"
+msgstr ""
+
+#: templates/base.html:42 templates/dashboard/health.html:3
+#: templates/dashboard/health.html:4 templates/dashboard/home.html:30
+msgid "Scraper health"
+msgstr ""
+
+#: templates/base.html:45 templates/dashboard/team.html:3
+#: templates/dashboard/team.html:4
+msgid "Team"
+msgstr ""
+
+#: templates/base.html:46 templates/dashboard/billing.html:3
+#: templates/dashboard/billing.html:4
+msgid "Plan & limits"
+msgstr ""
+
+#: templates/base.html:47 templates/dashboard/settings.html:3
+#: templates/dashboard/settings.html:4
+msgid "Settings"
+msgstr ""
+
+#: templates/base.html:48
+msgid "Admin"
+msgstr ""
+
+#: templates/base.html:53
+msgid "Log out"
+msgstr ""
+
+#: templates/base.html:77
+msgid "Toggle dark mode"
+msgstr ""
+
+#: templates/dashboard/alerts.html:8
+msgid "Alert rules"
+msgstr ""
+
+#: templates/dashboard/alerts.html:11
+#: templates/dashboard/product_detail.html:117
+msgid "Type"
+msgstr ""
+
+#: templates/dashboard/alerts.html:11
+msgid "Threshold"
+msgstr ""
+
+#: templates/dashboard/alerts.html:11 templates/dashboard/pricing.html:10
+msgid "Scope"
+msgstr ""
+
+#: templates/dashboard/alerts.html:11
+msgid "Channels"
+msgstr ""
+
+#: templates/dashboard/alerts.html:21
+msgid "disable"
+msgstr ""
+
+#: templates/dashboard/alerts.html:21
+msgid "enable"
+msgstr ""
+
+#: templates/dashboard/alerts.html:26
+msgid "No rules"
+msgstr ""
+
+#: templates/dashboard/alerts.html:33 templates/dashboard/pricing.html:29
+msgid "New rule"
+msgstr ""
+
+#: templates/dashboard/alerts.html:36 templates/dashboard/pricing.html:32
+msgid "Add"
+msgstr ""
+
+#: templates/dashboard/alerts.html:38
+msgid ""
+"Alerts for the same product are grouped: at most one message per product "
+"every 30 minutes."
+msgstr ""
+
+#: templates/dashboard/alerts.html:44
+msgid "Alert history"
+msgstr ""
+
+#: templates/dashboard/alerts.html:47 templates/dashboard/partials/feed.html:4
+#: templates/dashboard/product_detail.html:117
+msgid "When"
+msgstr ""
+
+#: templates/dashboard/alerts.html:47 templates/dashboard/health.html:8
+#: templates/dashboard/health.html:30 templates/dashboard/partials/feed.html:4
+#: templates/dashboard/product_detail.html:83
+#: templates/dashboard/product_detail.html:117
+msgid "Store"
+msgstr ""
+
+#: templates/dashboard/alerts.html:47
+msgid "Event"
+msgstr ""
+
+#: templates/dashboard/alerts.html:47
+msgid "Delivery"
+msgstr ""
+
+#: templates/dashboard/alerts.html:55
+msgid "pending"
+msgstr ""
+
+#: templates/dashboard/alerts.html:57 templates/dashboard/home.html:58
+msgid "No alerts yet"
+msgstr ""
+
+#: templates/dashboard/billing.html:9
+msgid "Current plan"
+msgstr ""
+
+#: templates/dashboard/billing.html:13
+msgid "Valid until"
+msgstr ""
+
+#: templates/dashboard/billing.html:13
+msgid "days left"
+msgstr ""
+
+#: templates/dashboard/billing.html:18
+msgid "Competitor links"
+msgstr ""
+
+#: templates/dashboard/billing.html:22
+msgid "Team members"
+msgstr ""
+
+#: templates/dashboard/billing.html:26
+msgid "Fastest check interval"
+msgstr ""
+
+#: templates/dashboard/billing.html:26
+msgid "min"
+msgstr ""
+
+#: templates/dashboard/billing.html:36
+msgid "UZS / month"
+msgstr ""
+
+#: templates/dashboard/billing.html:36
+msgid "Free"
+msgstr ""
+
+#: templates/dashboard/billing.html:38
+#, python-format
+msgid "up to %(n)s links"
+msgstr ""
+
+#: templates/dashboard/billing.html:39
+#, python-format
+msgid "every %(n)s min"
+msgstr ""
+
+#: templates/dashboard/billing.html:40
+#, python-format
+msgid "%(n)s team members"
+msgstr ""
+
+#: templates/dashboard/billing.html:41
+msgid "Telegram alerts"
+msgstr ""
+
+#: templates/dashboard/billing.html:42
+msgid "Excel reports"
+msgstr ""
+
+#: templates/dashboard/billing.html:44
+#, python-format
+msgid "%(n)s-day trial"
+msgstr ""
+
+#: templates/dashboard/billing.html:49
+msgid "mo"
+msgstr ""
+
+#: templates/dashboard/billing.html:50
+msgid "Request invoice"
+msgstr ""
+
+#: templates/dashboard/billing.html:60
+msgid "Plan"
+msgstr ""
+
+#: templates/dashboard/billing.html:60
+msgid "Months"
+msgstr ""
+
+#: templates/dashboard/billing.html:60
+msgid "Amount"
+msgstr ""
+
+#: templates/dashboard/billing.html:60 templates/dashboard/health.html:8
+#: templates/dashboard/product_detail.html:83
+msgid "Status"
+msgstr ""
+
+#: templates/dashboard/billing.html:60
+msgid "Date"
+msgstr ""
+
+#: templates/dashboard/form.html:10 templates/dashboard/settings.html:21
+msgid "Save"
+msgstr ""
+
+#: templates/dashboard/form.html:11
+msgid "Cancel"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+msgid "Adapter"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+msgid "Success (1h)"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+msgid "Checks (1h)"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+#: templates/dashboard/partials/product_rows.html:8
+msgid "Links"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+msgid "Failing"
+msgstr ""
+
+#: templates/dashboard/health.html:8
+msgid "Last check"
+msgstr ""
+
+#: templates/dashboard/health.html:21
+msgid "No stores yet"
+msgstr ""
+
+#: templates/dashboard/health.html:28
+msgid "Problem links"
+msgstr ""
+
+#: templates/dashboard/health.html:30
+msgid "Failures in a row"
+msgstr ""
+
+#: templates/dashboard/health.html:30
+msgid "Last error"
+msgstr ""
+
+#: templates/dashboard/health.html:34
+msgid "All links are working"
+msgstr ""
+
+#: templates/dashboard/health.html:39
+msgid "Checks in the last hour"
+msgstr ""
+
+#: templates/dashboard/health.html:43
+msgid "Events"
+msgstr ""
+
+#: templates/dashboard/home.html:8
+#, python-format
+msgid "Your %(plan)s plan ends in %(days)s days."
+msgstr ""
+
+#: templates/dashboard/home.html:9
+msgid "Extend"
+msgstr ""
+
+#: templates/dashboard/home.html:15
+msgid "Products tracked"
+msgstr ""
+
+#: templates/dashboard/home.html:17 templates/dashboard/product_detail.html:34
+#, python-format
+msgid "%(n)s competitor links"
+msgstr ""
+
+#: templates/dashboard/home.html:20 templates/dashboard/products.html:11
+msgid "I'm more expensive"
+msgstr ""
+
+#: templates/dashboard/home.html:22
+msgid "than the cheapest competitor"
+msgstr ""
+
+#: templates/dashboard/home.html:25
+msgid "Changes in 24h"
+msgstr ""
+
+#: templates/dashboard/home.html:27
+msgid "competitor price changes"
+msgstr ""
+
+#: templates/dashboard/home.html:32
+msgid "stores working normally"
+msgstr ""
+
+#: templates/dashboard/home.html:39
+msgid "Latest price changes"
+msgstr ""
+
+#: templates/dashboard/home.html:40
+msgid "auto-refresh every 60 s"
+msgstr ""
+
+#: templates/dashboard/home.html:48
+msgid "Recent alerts"
+msgstr ""
+
+#: templates/dashboard/home.html:49 templates/dashboard/products.html:10
+msgid "All"
+msgstr ""
+
+#: templates/dashboard/import.html:8
+msgid "Bulk import products and links"
+msgstr ""
+
+#: templates/dashboard/import.html:9
+msgid ""
+"Columns: sku, name, category, my_price, cost_price, url_1, url_2, url_3 … "
+"Existing SKUs are updated, new links are added."
+msgstr ""
+
+#: templates/dashboard/import.html:11
+msgid "Excel template"
+msgstr ""
+
+#: templates/dashboard/import.html:12
+msgid "CSV template"
+msgstr ""
+
+#: templates/dashboard/import.html:16
+msgid "Import"
+msgstr ""
+
+#: templates/dashboard/import.html:20
+msgid "Export report"
+msgstr ""
+
+#: templates/dashboard/import.html:21
+msgid ""
+"My prices vs every competitor, market min/avg, recommended price. Rows where "
+"I'm more expensive are highlighted."
+msgstr ""
+
+#: templates/dashboard/import.html:31
+msgid "Import report"
+msgstr ""
+
+#: templates/dashboard/import.html:33
+msgid "Products created"
+msgstr ""
+
+#: templates/dashboard/import.html:34
+msgid "Products updated"
+msgstr ""
+
+#: templates/dashboard/import.html:35
+msgid "Links added"
+msgstr ""
+
+#: templates/dashboard/import.html:36
+msgid "Errors"
+msgstr ""
+
+#: templates/dashboard/import.html:39
+msgid "Row"
+msgstr ""
+
+#: templates/dashboard/import.html:39
+msgid "Error"
+msgstr ""
+
+#: templates/dashboard/partials/feed.html:4
+msgid "Was"
+msgstr ""
+
+#: templates/dashboard/partials/feed.html:4
+msgid "Now"
+msgstr ""
+
+#: templates/dashboard/partials/feed.html:14
+#: templates/dashboard/product_detail.html:90
+msgid "out"
+msgstr ""
+
+#: templates/dashboard/partials/feed.html:20
+msgid "No changes yet. Add products and competitor links to start."
+msgstr ""
+
+#: templates/dashboard/partials/product_rows.html:8
+msgid "Diff"
+msgstr ""
+
+#: templates/dashboard/partials/product_rows.html:30
+msgid "No products found."
+msgstr ""
+
+#: templates/dashboard/partials/product_rows.html:31
+msgid "Import from Excel"
+msgstr ""
+
+#: templates/dashboard/pricing.html:6
+msgid ""
+"The most specific active rule wins: product → category → all products. The "
+"recommended price never goes below cost × (1 + minimum margin) and is "
+"rounded to the chosen step."
+msgstr ""
+
+#: templates/dashboard/pricing.html:10
+msgid "Name"
+msgstr ""
+
+#: templates/dashboard/pricing.html:10
+msgid "Strategy"
+msgstr ""
+
+#: templates/dashboard/pricing.html:10
+msgid "Params"
+msgstr ""
+
+#: templates/dashboard/pricing.html:18
+msgid "margin"
+msgstr ""
+
+#: templates/dashboard/pricing.html:23
+#, python-format
+msgid "No rules — the default (cheapest − 1 000, margin ≥ 5%%) is used."
+msgstr ""
+
+#: templates/dashboard/product_detail.html:17
+msgid "Check now"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:18
+msgid "Edit"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:19
+msgid "Delete this product?"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:29
+msgid "Cost"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:32
+msgid "Cheapest competitor"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:37
+msgid "Recommended price"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:42
+msgid "Apply recommended price"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:51
+msgid "Price history"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:53
+#: templates/dashboard/product_detail.html:54
+#: templates/dashboard/product_detail.html:55
+msgid "d"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:58
+msgid "Price history chart"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:61
+msgid "How the recommendation is calculated"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:62
+msgid "Rule"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:66
+msgid "Configure pricing rules"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:72
+msgid "Competitors"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:77
+msgid "Add link"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:83
+#: templates/dashboard/product_detail.html:117
+msgid "Price"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:83
+#: templates/dashboard/product_detail.html:117
+msgid "Old price"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:83
+#: templates/dashboard/product_detail.html:117
+msgid "Stock"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:83
+msgid "Checked"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:90
+msgid "in stock"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:95
+msgid "Re-checking in 10 minutes"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:100
+msgid "pause"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:100
+msgid "resume"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:101
+msgid "Remove link?"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:106
+msgid "No competitor links yet — paste a product URL above."
+msgstr ""
+
+#: templates/dashboard/product_detail.html:114
+msgid "Snapshots"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:126
+msgid "suspicious"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:126
+msgid "rejected"
+msgstr ""
+
+#: templates/dashboard/product_detail.html:129
+msgid "No data yet"
+msgstr ""
+
+#: templates/dashboard/products.html:8
+msgid "Search by name or SKU"
+msgstr ""
+
+#: templates/dashboard/products.html:12
+msgid "I'm cheapest"
+msgstr ""
+
+#: templates/dashboard/products.html:13
+msgid "No competitor links"
+msgstr ""
+
+#: templates/dashboard/products.html:16
+msgid "All categories"
+msgstr ""
+
+#: templates/dashboard/settings.html:12
+msgid "Digest time is in Asia/Tashkent time."
+msgstr ""
+
+#: templates/dashboard/settings.html:16
+msgid "My language"
+msgstr ""
+
+#: templates/dashboard/settings.html:27
+msgid "Your API token:"
+msgstr ""
+
+#: templates/dashboard/settings.html:31
+msgid "Open API documentation"
+msgstr ""
+
+#: templates/dashboard/settings.html:33
+msgid "API access is included in the Business plan."
+msgstr ""
+
+#: templates/dashboard/settings.html:33
+msgid "Plans"
+msgstr ""
+
+#: templates/dashboard/team.html:9
+msgid "Role"
+msgstr ""
+
+#: templates/dashboard/team.html:9
+msgid "Since"
+msgstr ""
+
+#: templates/dashboard/team.html:13
+msgid "remove"
+msgstr ""
+
+#: templates/dashboard/team.html:16
+msgid "invited"
+msgstr ""
+
+#: templates/dashboard/team.html:23
+msgid "Invite a colleague"
+msgstr ""
+
+#: templates/dashboard/team.html:26
+msgid "Invite"
+msgstr ""
+
+#: templates/dashboard/team.html:29
+msgid "Manager: can edit products and rules. Viewer: read-only."
+msgstr ""
+
+#: templates/dashboard/telegram.html:8
+msgid ""
+"The Telegram bot token is not configured on this server yet "
+"(TELEGRAM_BOT_TOKEN). Alerts are written to the log only."
+msgstr ""
+
+#: templates/dashboard/telegram.html:11
+msgid "Telegram is connected"
+msgstr ""
+
+#: templates/dashboard/telegram.html:13
+msgid "Disconnect"
+msgstr ""
+
+#: templates/dashboard/telegram.html:15
+msgid "Connect Telegram to receive alerts"
+msgstr ""
+
+#: templates/dashboard/telegram.html:17
+msgid "Open the bot"
+msgstr ""
+
+#: templates/dashboard/telegram.html:17
+msgid "Open our Telegram bot"
+msgstr ""
+
+#: templates/dashboard/telegram.html:18
+msgid "Send the command:"
+msgstr ""
+
+#: templates/dashboard/telegram.html:23
+msgid "The code is valid for 15 minutes."
+msgstr ""
+
+#: templates/dashboard/telegram.html:24
+msgid "New code"
+msgstr ""
+
+#: templates/dashboard/telegram.html:27
+msgid "Bot commands"
+msgstr ""
+
+#: templates/dashboard/telegram.html:29
+msgid "my products with the cheapest competitor price"
+msgstr ""
+
+#: templates/dashboard/telegram.html:30
+msgid "check a product right now"
+msgstr ""
+
+#: templates/dashboard/telegram.html:31
+msgid "digest now"
+msgstr ""
+
+#: templates/dashboard/telegram.html:32
+msgid "change language"
+msgstr ""

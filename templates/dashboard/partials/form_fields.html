@@ -1,0 +1,15 @@
+{% if form.non_field_errors %}<div class="errorlist">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+{% for field in form %}
+  {% if field.is_hidden %}{{ field }}{% else %}
+  <div class="{% if field.widget_type == 'checkbox' %}flex items-center gap-2{% endif %}">
+    {% if field.widget_type == 'checkbox' %}
+      {{ field }} <label for="{{ field.id_for_label }}" class="text-sm">{{ field.label }}</label>
+    {% else %}
+      <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1">{{ field.label }}</label>
+      {{ field }}
+    {% endif %}
+    {% if field.help_text %}<p class="text-xs text-slate-400 mt-1">{{ field.help_text }}</p>{% endif %}
+    {% if field.errors %}<div class="errorlist">{{ field.errors|join:" " }}</div>{% endif %}
+  </div>
+  {% endif %}
+{% endfor %}

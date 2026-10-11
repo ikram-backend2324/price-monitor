@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Import / export" %}{% endblock %}
+{% block page_title %}{% translate "Import / export" %}{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-2 gap-6">
+  <section class="card p-6">
+    <h2 class="font-semibold mb-2">{% translate "Bulk import products and links" %}</h2>
+    <p class="text-sm text-slate-500 mb-4">{% translate "Columns: sku, name, category, my_price, cost_price, url_1, url_2, url_3 … Existing SKUs are updated, new links are added." %}</p>
+    <div class="flex gap-2 mb-6">
+      <a class="btn btn-ghost" href="{% url 'dashboard:import_template' 'xlsx' %}">⬇️ {% translate "Excel template" %}</a>
+      <a class="btn btn-ghost" href="{% url 'dashboard:import_template' 'csv' %}">⬇️ {% translate "CSV template" %}</a>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="space-y-4">{% csrf_token %}
+      {% include "dashboard/partials/form_fields.html" %}
+      <button class="btn btn-primary">⬆️ {% translate "Import" %}</button>
+    </form>
+  </section>
+  <section class="card p-6">
+    <h2 class="font-semibold mb-2">{% translate "Export report" %}</h2>
+    <p class="text-sm text-slate-500 mb-4">{% translate "My prices vs every competitor, market min/avg, recommended price. Rows where I'm more expensive are highlighted." %}</p>
+    <div class="flex gap-2">
+      <a class="btn btn-primary" href="{% url 'dashboard:export' 'xlsx' %}">⬇️ Excel</a>
+      <a class="btn btn-ghost" href="{% url 'dashboard:export' 'csv' %}">⬇️ CSV</a>
+    </div>
+  </section>
+</div>
+
+{% if report %}
+<section class="card p-6 mt-6">
+  <h2 class="font-semibold mb-3">{% translate "Import report" %}</h2>
+  <div class="flex flex-wrap gap-3 text-sm mb-4">
+    <span class="badge badge-green">{% translate "Products created" %}: {{ report.created_products }}</span>
+    <span class="badge badge-slate">{% translate "Products updated" %}: {{ report.updated_products }}</span>
+    <span class="badge badge-green">{% translate "Links added" %}: {{ report.created_offers }}</span>
+    <span class="badge {% if report.errors %}badge-red{% else %}badge-slate{% endif %}">{% translate "Errors" %}: {{ report.errors|length }}</span>
+  </div>
+  {% if report.errors %}
+  <table class="table"><thead><tr><th>{% translate "Row" %}</th><th>{% translate "Error" %}</th></tr></thead>
+    <tbody>{% for line, err in report.errors %}<tr><td>{{ line }}</td><td class="text-red-600">{{ err }}</td></tr>{% endfor %}</tbody>
+  </table>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

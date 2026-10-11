@@ -1,0 +1,17 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+{% block title %}{% translate "Invitation" %}{% endblock %}
+{% block card %}
+<h1 class="text-xl font-semibold mb-2">{% blocktranslate with org=invite.organization.name %}Join {{ org }}{% endblocktranslate %}</h1>
+<p class="text-sm text-slate-500 mb-6">{{ invite.email }} · {{ invite.get_role_display }}</p>
+<form method="post" class="space-y-4">{% csrf_token %}
+  {% if not existing %}
+  <div>
+    <label class="block text-sm font-medium mb-1">{% translate "Choose a password" %}</label>
+    <input name="password" type="password" minlength="8" required class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2">
+    {% if form.password.errors %}<div class="errorlist">{{ form.password.errors|join:" " }}</div>{% endif %}
+  </div>
+  {% endif %}
+  <button class="btn btn-primary w-full justify-center">{% translate "Accept invitation" %}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load i18n pw %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block page_title %}<a href="{% url 'dashboard:products' %}" class="text-slate-400 hover:underline">{% translate "Products" %}</a> / {{ product.sku }}{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js" defer></script>
+{% endblock %}
+{% block content %}
+<div class="flex flex-col lg:flex-row lg:items-start gap-4 justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+    <div class="text-sm text-slate-500 mt-1">SKU <span class="font-mono">{{ product.sku }}</span>{% if product.category %} · {{ product.category.name }}{% endif %}</div>
+  </div>
+  {% if can_edit %}
+  <div class="flex flex-wrap gap-2">
+    <button class="btn btn-ghost" hx-post="{% url 'dashboard:check_now' product.pk %}" hx-target="#check-result" hx-swap="innerHTML">🔄 {% translate "Check now" %}</button>
+    <a class="btn btn-ghost" href="{% url 'dashboard:product_edit' product.pk %}">✏️ {% translate "Edit" %}</a>
+    <form method="post" action="{% url 'dashboard:product_delete' product.pk %}" onsubmit="return confirm('{% translate "Delete this product?" %}')">{% csrf_token %}<button class="btn btn-ghost btn-danger">🗑</button></form>
+  </div>
+  {% endif %}
+</div>
+<div id="check-result" class="mb-4"></div>
+
+<div class="grid sm:grid-cols-3 gap-4 mb-6">
+  <div class="card p-5">
+    <div class="text-sm text-slate-500">{% translate "My price" %}</div>
+    <div class="text-2xl font-bold mt-1">{{ product.my_price|money }} <span class="text-sm font-normal text-slate-400">{{ product.currency }}</span></div>
+    <div class="text-xs text-slate-400 mt-1">{% translate "Cost" %}: {{ product.cost_price|money }}</div>
+  </div>
+  <div class="card p-5">
+    <div class="text-sm text-slate-500">{% translate "Cheapest competitor" %}</div>
+    <div class="text-2xl font-bold mt-1 {% if market and product.my_price > market %}text-red-600{% else %}text-emerald-600{% endif %}">{{ market|money }}</div>
+    <div class="text-xs text-slate-400 mt-1">{% blocktranslate with n=offers|length %}{{ n }} competitor links{% endblocktranslate %}</div>
+  </div>
+  <div class="card p-5 border-indigo-300 dark:border-indigo-800">
+    <div class="text-sm text-slate-500">{% translate "Recommended price" %}</div>
+    <div class="text-2xl font-bold mt-1 text-indigo-600">{{ rec.price|money }}</div>
+    {% if can_edit and rec.price and rec.price != product.my_price %}
+    <form method="post" action="{% url 'dashboard:apply_price' product.pk %}" class="mt-2">{% csrf_token %}
+      <input type="hidden" name="price" value="{{ rec.price }}">
+      <button class="text-sm text-indigo-600 hover:underline">✓ {% translate "Apply recommended price" %}</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6 mb-6">
+  <section class="card p-5 lg:col-span-2">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-semibold">{% translate "Price history" %}</h2>
+      <div class="flex gap-1 text-sm" id="periods">
+        <button data-days="7" class="period px-3 py-1 rounded-lg">7 {% translate "d" %}</button>
+        <button data-days="30" class="period px-3 py-1 rounded-lg">30 {% translate "d" %}</button>
+        <button data-days="90" class="period px-3 py-1 rounded-lg">90 {% translate "d" %}</button>
+      </div>
+    </div>
+    <div class="relative h-72"><canvas id="chart" aria-label="{% translate 'Price history chart' %}"></canvas></div>
+  </section>
+  <section class="card p-5">
+    <h2 class="font-semibold mb-3">{% translate "How the recommendation is calculated" %}</h2>
+    <p class="text-xs text-slate-500 mb-3">{% translate "Rule" %}: <b>{{ rec.rule_name }}</b> — {{ rec.strategy }}</p>
+    <ol class="text-sm space-y-2 list-decimal list-inside">
+      {% for step in rec.steps %}<li>{{ step }}</li>{% endfor %}
+    </ol>
+    <a href="{% url 'dashboard:pricing' %}" class="text-xs text-indigo-600 hover:underline mt-4 inline-block">{% translate "Configure pricing rules" %} →</a>
+  </section>
+</div>
+
+<section class="card mb-6">
+  <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+    <h2 class="font-semibold">{% translate "Competitors" %}</h2>
+    {% if can_edit %}
+    <form method="post" action="{% url 'dashboard:offer_create' product.pk %}" class="flex flex-wrap gap-2 w-full sm:w-auto">{% csrf_token %}
+      <input name="url" type="url" required placeholder="https://..." class="flex-1 sm:w-80 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm">
+      <input name="check_interval_minutes" type="number" min="5" value="{{ offer_form.initial.check_interval_minutes }}" class="w-24 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm" title="{% translate 'Check interval (min)' %}">
+      <button class="btn btn-primary">+ {% translate "Add link" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="overflow-x-auto">
+  <table class="table">
+    <thead><tr><th>{% translate "Store" %}</th><th class="text-right">{% translate "Price" %}</th><th class="text-right hidden sm:table-cell">{% translate "Old price" %}</th><th>{% translate "Stock" %}</th><th class="hidden md:table-cell">{% translate "Checked" %}</th><th>{% translate "Status" %}</th><th></th></tr></thead>
+    <tbody>
+    {% for o in offers %}
+      <tr class="{% if not o.is_active %}opacity-50{% endif %}">
+        <td><a href="{{ o.url }}" target="_blank" rel="noopener" class="hover:underline font-medium">{{ o.store.name }}</a><div class="text-xs text-slate-400 truncate max-w-[14rem]">{{ o.last_title|default:o.url }}</div></td>
+        <td class="text-right font-medium whitespace-nowrap {% if o.last_price and o.last_price < product.my_price %}text-red-600{% endif %}">{{ o.last_price|money }}</td>
+        <td class="text-right text-slate-400 line-through hidden sm:table-cell whitespace-nowrap">{{ o.last_old_price|money }}</td>
+        <td>{% if o.last_in_stock is None %}<span class="badge badge-slate">?</span>{% elif o.last_in_stock %}<span class="badge badge-green">{% translate "in stock" %}</span>{% else %}<span class="badge badge-red">{% translate "out" %}</span>{% endif %}</td>
+        <td class="hidden md:table-cell text-slate-500 whitespace-nowrap">{% if o.last_checked_at %}{{ o.last_checked_at|timesince }}{% else %}—{% endif %}</td>
+        <td>
+          {% if o.last_status == 'ok' %}<span class="badge badge-green">OK</span>
+          {% elif o.last_status == 'new' %}<span class="badge badge-slate">{{ o.get_last_status_display }}</span>
+          {% elif o.last_status == 'suspicious' %}<span class="badge badge-amber" title="{% translate 'Re-checking in 10 minutes' %}">{{ o.get_last_status_display }}</span>
+          {% else %}<span class="badge badge-red" title="{{ o.last_error }}">{{ o.get_last_status_display }}</span>{% endif %}
+        </td>
+        <td class="text-right whitespace-nowrap">
+          {% if can_edit %}
+          <form method="post" action="{% url 'dashboard:offer_toggle' o.pk %}" class="inline">{% csrf_token %}<button class="text-xs text-slate-500 hover:underline">{% if o.is_active %}{% translate "pause" %}{% else %}{% translate "resume" %}{% endif %}</button></form>
+          <form method="post" action="{% url 'dashboard:offer_delete' o.pk %}" class="inline ml-2" onsubmit="return confirm('{% translate "Remove link?" %}')">{% csrf_token %}<button class="text-xs text-red-600 hover:underline">✕</button></form>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7" class="text-center text-slate-400 py-8">{% translate "No competitor links yet — paste a product URL above." %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card">
+  <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800"><h2 class="font-semibold">{% translate "Snapshots" %}</h2></div>
+  <div class="overflow-x-auto max-h-96">
+  <table class="table">
+    <thead><tr><th>{% translate "When" %}</th><th>{% translate "Store" %}</th><th class="text-right">{% translate "Price" %}</th><th class="text-right">{% translate "Old price" %}</th><th>{% translate "Stock" %}</th><th>{% translate "Type" %}</th></tr></thead>
+    <tbody>
+    {% for s in snapshots %}
+      <tr>
+        <td class="whitespace-nowrap text-slate-500">{{ s.checked_at|date:"d.m.Y H:i" }}</td>
+        <td>{{ s.offer.store.name }}</td>
+        <td class="text-right whitespace-nowrap">{{ s.price|money }}</td>
+        <td class="text-right whitespace-nowrap text-slate-400">{{ s.old_price|money }}</td>
+        <td>{% if s.in_stock %}✓{% else %}✕{% endif %}</td>
+        <td>{{ s.get_kind_display }}{% if s.is_suspicious %} <span class="badge badge-amber">{% translate "suspicious" %}</span>{% endif %}{% if s.rejected %} <span class="badge badge-slate">{% translate "rejected" %}</span>{% endif %}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="text-center text-slate-400 py-8">{% translate "No data yet" %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ec4899', '#84cc16', '#64748b'];
+  const url = "{% url 'dashboard:chart_data' product.pk %}";
+  let chart = null, days = 30;
+  try { days = parseInt(localStorage.getItem('pw-days') || '30', 10) || 30; } catch (e) {}
+
+  function themeColors() {
+    const dark = document.documentElement.classList.contains('dark');
+    return { grid: dark ? 'rgba(148,163,184,.12)' : 'rgba(100,116,139,.12)', text: dark ? '#cbd5e1' : '#475569' };
+  }
+  function fmt(v) { return new Intl.NumberFormat('ru-RU').format(Math.round(v)); }
+
+  async function load() {
+    document.querySelectorAll('.period').forEach(b => {
+      const on = parseInt(b.dataset.days, 10) === days;
+      b.className = 'period px-3 py-1 rounded-lg ' + (on ? 'bg-indigo-600 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800');
+    });
+    const data = await (await fetch(url + '?days=' + days)).json();
+    const t = themeColors();
+    const datasets = [{
+      label: data.mine.label, data: data.mine.data, borderColor: '#4f46e5', backgroundColor: '#4f46e5',
+      borderWidth: 3, borderDash: [6, 4], stepped: 'before', pointRadius: 0,
+    }].concat(data.competitors.map((c, i) => ({
+      label: c.label, data: c.data, borderColor: COLORS[i % COLORS.length], backgroundColor: COLORS[i % COLORS.length],
+      borderWidth: 2, stepped: 'before', pointRadius: 2,
+      segment: { borderDash: ctx => (ctx.p0.raw && ctx.p0.raw.in_stock === false) ? [2, 4] : undefined },
+    })));
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('chart'), {
+      type: 'line',
+      data: { datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false, interaction: { mode: 'nearest', intersect: false },
+        scales: {
+          x: { type: 'time', time: { tooltipFormat: 'dd.MM.yyyy HH:mm' }, grid: { color: t.grid }, ticks: { color: t.text } },
+          y: { grid: { color: t.grid }, ticks: { color: t.text, callback: fmt } },
+        },
+        plugins: {
+          legend: { labels: { color: t.text, usePointStyle: true } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)}${ctx.raw.in_stock === false ? ' (out of stock)' : ''}` } },
+        },
+      },
+    });
+  }
+  document.querySelectorAll('.period').forEach(b => b.addEventListener('click', () => {
+    days = parseInt(b.dataset.days, 10);
+    try { localStorage.setItem('pw-days', String(days)); } catch (e) {}
+    load();
+  }));
+  document.addEventListener('pw-theme', load);
+  load();
+});
+</script>
+{% endblock %}

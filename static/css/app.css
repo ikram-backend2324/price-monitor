@@ -1,0 +1,39 @@
+/* Small hand-written layer on top of Tailwind (CDN). */
+.nav-link { display: flex; align-items: center; gap: .6rem; padding: .55rem .75rem; border-radius: .5rem; color: rgb(71 85 105); }
+.nav-link:hover { background: rgb(241 245 249); }
+.nav-link.active { background: rgb(238 242 255); color: rgb(67 56 202); font-weight: 600; }
+.dark .nav-link { color: rgb(203 213 225); }
+.dark .nav-link:hover { background: rgb(30 41 59); }
+.dark .nav-link.active { background: rgb(49 46 129 / .5); color: rgb(199 210 254); }
+
+.card { background: white; border: 1px solid rgb(226 232 240); border-radius: .9rem; }
+.dark .card { background: rgb(15 23 42); border-color: rgb(30 41 59); }
+
+.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .9rem; border-radius: .55rem; font-size: .875rem; font-weight: 500; transition: background .15s; }
+.btn-primary { background: rgb(79 70 229); color: white; }
+.btn-primary:hover { background: rgb(67 56 202); }
+.btn-ghost { border: 1px solid rgb(203 213 225); }
+.btn-ghost:hover { background: rgb(241 245 249); }
+.dark .btn-ghost { border-color: rgb(51 65 85); }
+.dark .btn-ghost:hover { background: rgb(30 41 59); }
+.btn-danger { color: rgb(220 38 38); }
+
+.table { width: 100%; font-size: .875rem; }
+.table th { text-align: left; font-weight: 500; color: rgb(100 116 139); padding: .6rem .75rem; border-bottom: 1px solid rgb(226 232 240); white-space: nowrap; }
+.table td { padding: .6rem .75rem; border-bottom: 1px solid rgb(241 245 249); vertical-align: middle; }
+.dark .table th { border-color: rgb(30 41 59); }
+.dark .table td { border-color: rgb(30 41 59 / .6); }
+.table tr:hover td { background: rgb(248 250 252); }
+.dark .table tr:hover td { background: rgb(30 41 59 / .4); }
+
+.badge { display: inline-flex; align-items: center; padding: .1rem .5rem; border-radius: 999px; font-size: .75rem; font-weight: 500; }
+.badge-green { background: rgb(220 252 231); color: rgb(21 128 61); }
+.badge-red { background: rgb(254 226 226); color: rgb(185 28 28); }
+.badge-amber { background: rgb(254 243 199); color: rgb(180 83 9); }
+.badge-slate { background: rgb(241 245 249); color: rgb(71 85 105); }
+.dark .badge-green { background: rgb(20 83 45 / .5); color: rgb(134 239 172); }
+.dark .badge-red { background: rgb(127 29 29 / .5); color: rgb(252 165 165); }
+.dark .badge-amber { background: rgb(120 53 15 / .5); color: rgb(252 211 77); }
+.dark .badge-slate { background: rgb(30 41 59); color: rgb(203 213 225); }
+
+.errorlist { color: rgb(220 38 38); font-size: .8rem; margin-top: .25rem; }

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Team" %}{% endblock %}
+{% block page_title %}{% translate "Team" %}{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-3 gap-6">
+  <section class="card lg:col-span-2 overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>Email</th><th>{% translate "Role" %}</th><th>{% translate "Since" %}</th><th></th></tr></thead>
+      <tbody>
+      {% for m in members %}
+        <tr><td>{{ m.user.email }}</td><td>{{ m.get_role_display }}</td><td class="text-slate-500">{{ m.created_at|date:"d.m.Y" }}</td>
+          <td class="text-right">{% if current_membership.role == 'owner' and m.role != 'owner' %}<form method="post" action="{% url 'dashboard:member_remove' m.pk %}">{% csrf_token %}<button class="text-xs text-red-600 hover:underline">{% translate "remove" %}</button></form>{% endif %}</td></tr>
+      {% endfor %}
+      {% for i in invites %}
+        <tr class="opacity-60"><td>{{ i.email }}</td><td>{{ i.get_role_display }}</td><td colspan="2"><span class="badge badge-amber">{% translate "invited" %}</span> <span class="text-xs text-slate-400">/invite/{{ i.token }}/</span></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% if current_membership.role == 'owner' %}
+  <section class="card p-5">
+    <h2 class="font-semibold mb-4">{% translate "Invite a colleague" %}</h2>
+    <form method="post" class="space-y-3">{% csrf_token %}
+      {% include "dashboard/partials/form_fields.html" %}
+      <button class="btn btn-primary">{% translate "Invite" %}</button>
+    </form>
+    {% if invite_url %}<div class="mt-4 text-xs break-all bg-slate-100 dark:bg-slate-800 rounded p-3">{{ invite_url }}</div>{% endif %}
+    <p class="text-xs text-slate-400 mt-4">{% translate "Manager: can edit products and rules. Viewer: read-only." %}</p>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

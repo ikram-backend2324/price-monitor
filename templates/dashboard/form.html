@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="card p-6 max-w-2xl">
+  <form method="post" class="space-y-4">{% csrf_token %}
+    {% include "dashboard/partials/form_fields.html" %}
+    <div class="flex gap-2 pt-2">
+      <button class="btn btn-primary">{% translate "Save" %}</button>
+      <a href="javascript:history.back()" class="btn btn-ghost">{% translate "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

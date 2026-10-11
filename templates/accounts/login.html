@@ -1,0 +1,22 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+{% block title %}{% translate "Log in" %}{% endblock %}
+{% block card %}
+<h1 class="text-xl font-semibold mb-1">{% translate "Log in" %}</h1>
+<p class="text-sm text-slate-500 mb-6">{% translate "Competitor price monitoring for Uzum sellers and online shops." %}</p>
+<form method="post" class="space-y-4">{% csrf_token %}
+  {% if form.non_field_errors %}<div class="errorlist">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <div>
+    <label class="block text-sm font-medium mb-1" for="id_username">{% translate "Email" %}</label>
+    <input id="id_username" name="username" type="email" required autofocus value="{{ form.username.value|default:'' }}" class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2">
+  </div>
+  <div>
+    <label class="block text-sm font-medium mb-1" for="id_password">{% translate "Password" %}</label>
+    <input id="id_password" name="password" type="password" required class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2">
+  </div>
+  <input type="hidden" name="next" value="{{ next }}">
+  <button class="btn btn-primary w-full justify-center">{% translate "Log in" %}</button>
+</form>
+<p class="text-sm text-slate-500 mt-6 text-center">{% translate "No account?" %} <a class="text-indigo-600 hover:underline" href="{% url 'signup' %}">{% translate "Start a free 14-day trial" %}</a></p>
+<p class="text-xs text-slate-400 mt-4 text-center">Demo: demo@pricewatch.local</p>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+{% block card %}
+<h1 class="text-xl font-semibold mb-2">{% translate "Invitation expired" %}</h1>
+<p class="text-sm text-slate-500">{% translate "Ask the organization owner to send a new invitation." %}</p>
+{% endblock %}

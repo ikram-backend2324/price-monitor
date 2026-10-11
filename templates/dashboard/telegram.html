@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Telegram{% endblock %}
+{% block page_title %}Telegram{% endblock %}
+{% block content %}
+<div class="card p-6 max-w-2xl">
+  {% if not bot_configured %}
+  <div class="mb-4 rounded-lg px-4 py-3 text-sm bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200">{% translate "The Telegram bot token is not configured on this server yet (TELEGRAM_BOT_TOKEN). Alerts are written to the log only." %}</div>
+  {% endif %}
+  {% if link.is_linked %}
+    <h2 class="text-lg font-semibold">✅ {% translate "Telegram is connected" %}</h2>
+    <p class="text-sm text-slate-500 mt-1">chat_id {{ link.chat_id }}{% if link.username %} · @{{ link.username }}{% endif %}</p>
+    <form method="post" class="mt-4">{% csrf_token %}<input type="hidden" name="action" value="unlink"><button class="btn btn-ghost btn-danger">{% translate "Disconnect" %}</button></form>
+  {% else %}
+    <h2 class="text-lg font-semibold">{% translate "Connect Telegram to receive alerts" %}</h2>
+    <ol class="list-decimal list-inside text-sm space-y-2 mt-4">
+      <li>{% if bot_username %}{% translate "Open the bot" %} <a class="text-indigo-600 hover:underline" target="_blank" href="https://t.me/{{ bot_username }}?start={{ link.code }}">@{{ bot_username }}</a>{% else %}{% translate "Open our Telegram bot" %}{% endif %}</li>
+      <li>{% translate "Send the command:" %}</li>
+    </ol>
+    <div class="mt-3 flex items-center gap-3">
+      <code class="text-2xl font-mono font-bold tracking-widest bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2">/start {{ link.code }}</code>
+    </div>
+    <p class="text-xs text-slate-400 mt-2">{% translate "The code is valid for 15 minutes." %}</p>
+    <form method="post" class="mt-4">{% csrf_token %}<button class="btn btn-ghost">🔄 {% translate "New code" %}</button></form>
+  {% endif %}
+  <div class="mt-8 text-sm text-slate-500">
+    <h3 class="font-semibold text-slate-700 dark:text-slate-200 mb-2">{% translate "Bot commands" %}</h3>
+    <ul class="space-y-1 font-mono text-xs">
+      <li>/products — {% translate "my products with the cheapest competitor price" %}</li>
+      <li>/check SKU — {% translate "check a product right now" %}</li>
+      <li>/report — {% translate "digest now" %}</li>
+      <li>/lang — {% translate "change language" %}</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

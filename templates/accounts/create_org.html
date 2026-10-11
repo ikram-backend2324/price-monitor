@@ -1,0 +1,10 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+{% block title %}{% translate "Create organization" %}{% endblock %}
+{% block card %}
+<h1 class="text-xl font-semibold mb-4">{% translate "Create your organization" %}</h1>
+<form method="post" class="space-y-4">{% csrf_token %}
+  <input name="name" required maxlength="200" placeholder="{% translate 'Company name' %}" class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2">
+  <button class="btn btn-primary w-full justify-center">{% translate "Create" %}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n pw %}
+{% block title %}{% translate "Pricing rules" %}{% endblock %}
+{% block page_title %}{% translate "Pricing rules" %}{% endblock %}
+{% block content %}
+<p class="text-sm text-slate-500 mb-6 max-w-3xl">{% translate "The most specific active rule wins: product → category → all products. The recommended price never goes below cost × (1 + minimum margin) and is rounded to the chosen step." %}</p>
+<div class="grid lg:grid-cols-3 gap-6">
+  <section class="card lg:col-span-2 overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>{% translate "Name" %}</th><th>{% translate "Strategy" %}</th><th>{% translate "Params" %}</th><th>{% translate "Scope" %}</th><th></th></tr></thead>
+      <tbody>
+      {% for r in rules %}
+        <tr class="{% if not r.is_active %}opacity-50{% endif %}">
+          <td class="font-medium">{{ r.name }}</td>
+          <td>{{ r.get_strategy_display }}</td>
+          <td class="text-xs text-slate-500 whitespace-nowrap">
+            {% if r.strategy == 'undercut_amount' %}−{{ r.amount|money }}{% elif r.strategy == 'undercut_percent' %}−{{ r.percent|floatformat:"-2" }}%{% endif %}
+            · {% translate "margin" %} ≥ {{ r.min_margin_percent|floatformat:"-2" }}% · ⌊{{ r.round_to|money }}⌋
+          </td>
+          <td>{{ r.get_scope_display }}{% if r.category %}: {{ r.category }}{% elif r.product %}: {{ r.product.sku }}{% endif %}</td>
+          <td class="text-right">{% if can_edit %}<form method="post" action="{% url 'dashboard:pricing_delete' r.pk %}">{% csrf_token %}<button class="text-xs text-red-600 hover:underline">✕</button></form>{% endif %}</td>
+        </tr>
+      {% empty %}<tr><td colspan="5" class="text-center text-slate-400 py-8">{% translate "No rules — the default (cheapest − 1 000, margin ≥ 5%) is used." %}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% if can_edit %}
+  <section class="card p-5">
+    <h2 class="font-semibold mb-4">{% translate "New rule" %}</h2>
+    <form method="post" class="space-y-3">{% csrf_token %}
+      {% include "dashboard/partials/form_fields.html" %}
+      <button class="btn btn-primary">{% translate "Add" %}</button>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

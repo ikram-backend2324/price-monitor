@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Products" %}{% endblock %}
+{% block page_title %}{% translate "Products" %}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row gap-3 sm:items-center mb-6">
+  <form class="flex flex-1 flex-wrap gap-2" hx-get="{% url 'dashboard:products' %}" hx-target="#rows" hx-trigger="input changed delay:300ms from:input, change from:select" hx-push-url="true">
+    <input name="q" value="{{ q }}" placeholder="{% translate 'Search by name or SKU' %}" class="flex-1 min-w-[12rem] rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm">
+    <select name="filter" class="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm">
+      <option value="">{% translate "All" %}</option>
+      <option value="expensive" {% if filter == 'expensive' %}selected{% endif %}>{% translate "I'm more expensive" %}</option>
+      <option value="cheaper" {% if filter == 'cheaper' %}selected{% endif %}>{% translate "I'm cheapest" %}</option>
+      <option value="nooffers" {% if filter == 'nooffers' %}selected{% endif %}>{% translate "No competitor links" %}</option>
+    </select>
+    <select name="category" class="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm">
+      <option value="">{% translate "All categories" %}</option>
+      {% for c in categories %}<option value="{{ c.id }}" {% if category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+    </select>
+  </form>
+  <div class="flex gap-2">
+    <a href="{% url 'dashboard:export' 'xlsx' %}" class="btn btn-ghost">⬇️ Excel</a>
+    {% if can_edit %}<a href="{% url 'dashboard:product_create' %}" class="btn btn-primary">+ {% translate "Product" %}</a>{% endif %}
+  </div>
+</div>
+<div class="card overflow-hidden" id="rows">
+  {% include "dashboard/partials/product_rows.html" %}
+</div>
+{% endblock %}

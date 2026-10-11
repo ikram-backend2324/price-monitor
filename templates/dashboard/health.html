@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n pw %}
+{% block title %}{% translate "Scraper health" %}{% endblock %}
+{% block page_title %}{% translate "Scraper health" %}{% endblock %}
+{% block content %}
+<section class="card overflow-x-auto mb-6">
+  <table class="table">
+    <thead><tr><th>{% translate "Store" %}</th><th>{% translate "Adapter" %}</th><th>{% translate "Status" %}</th><th class="text-right">{% translate "Success (1h)" %}</th><th class="text-right">{% translate "Checks (1h)" %}</th><th class="text-right">{% translate "Links" %}</th><th class="text-right">{% translate "Failing" %}</th><th>{% translate "Last check" %}</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td class="font-medium">{{ r.store.name }}<div class="text-xs text-slate-400">{{ r.store.domain }}</div></td>
+        <td class="text-sm">{{ r.store.get_adapter_display }}{% if r.store.requires_browser %} · 🌐{% endif %}</td>
+        <td>{% if r.store.health_status == 'degraded' %}<span class="badge badge-red">{% translate "Degraded" %}</span>{% elif r.store.health_status == 'ok' %}<span class="badge badge-green">OK</span>{% else %}<span class="badge badge-slate">{% translate "Unknown" %}</span>{% endif %}</td>
+        <td class="text-right {% if r.rate is not None and r.rate < 0.7 %}text-red-600 font-medium{% endif %}">{{ r.rate|rate }}</td>
+        <td class="text-right">{{ r.total }}</td>
+        <td class="text-right">{{ r.offers }}</td>
+        <td class="text-right">{{ r.failing }}</td>
+        <td class="text-slate-500 whitespace-nowrap">{% if r.last_run %}{{ r.last_run.started_at|timesince }} · {{ r.last_run.get_status_display }}{% else %}—{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="8" class="text-center text-slate-400 py-8">{% translate "No stores yet" %}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<div class="grid lg:grid-cols-3 gap-6">
+  <section class="card lg:col-span-2 overflow-x-auto">
+    <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800"><h2 class="font-semibold">{% translate "Problem links" %}</h2></div>
+    <table class="table">
+      <thead><tr><th>{% translate "Product" %}</th><th>{% translate "Store" %}</th><th class="text-right">{% translate "Failures in a row" %}</th><th>{% translate "Last error" %}</th></tr></thead>
+      <tbody>
+      {% for o in failing %}
+        <tr><td><a class="hover:underline" href="{% url 'dashboard:product_detail' o.product_id %}">{{ o.product.name|truncatechars:36 }}</a></td><td>{{ o.store.name }}</td><td class="text-right">{{ o.consecutive_failures }}{% if o.robots_blocked %} <span class="badge badge-amber">robots.txt</span>{% endif %}</td><td class="text-xs text-red-600 max-w-xs truncate" title="{{ o.last_error }}">{{ o.last_error }}</td></tr>
+      {% empty %}<tr><td colspan="4" class="text-center text-slate-400 py-8">✓ {% translate "All links are working" %}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section class="card">
+    <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800"><h2 class="font-semibold">{% translate "Checks in the last hour" %}</h2></div>
+    <ul class="p-5 space-y-2 text-sm">
+      {% for r in runs %}<li class="flex justify-between"><span>{{ r.status }}</span><b>{{ r.n }}</b></li>{% empty %}<li class="text-slate-400">—</li>{% endfor %}
+    </ul>
+    <div class="px-5 py-4 border-t border-slate-200 dark:border-slate-800"><h2 class="font-semibold mb-2">{% translate "Events" %}</h2>
+      <ul class="space-y-2 text-xs">{% for e in events %}<li><span class="badge {% if e.kind == 'SCRAPER_RECOVERED' %}badge-green{% else %}badge-red{% endif %}">{{ e.kind }}</span> {{ e.store.name }} · {{ e.created_at|timesince }}<div class="text-slate-500">{{ e.details|truncatechars:120 }}</div></li>{% empty %}<li class="text-slate-400">—</li>{% endfor %}</ul>
+    </div>
+  </section>
+</div>
+{% endblock %}

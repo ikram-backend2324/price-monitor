@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Alerts" %}{% endblock %}
+{% block page_title %}{% translate "Alerts" %}{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-3 gap-6">
+  <section class="card lg:col-span-2">
+    <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800"><h2 class="font-semibold">{% translate "Alert rules" %}</h2></div>
+    <div class="overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>{% translate "Type" %}</th><th>{% translate "Threshold" %}</th><th>{% translate "Scope" %}</th><th>{% translate "Channels" %}</th><th></th></tr></thead>
+      <tbody>
+      {% for r in rules %}
+        <tr class="{% if not r.is_active %}opacity-50{% endif %}">
+          <td>{{ r.get_kind_display }}</td>
+          <td>{% if r.kind == 'PRICE_DROP_PERCENT' or r.kind == 'CHEAPER_THAN_MINE' %}{{ r.threshold|floatformat:"-1" }}%{% else %}—{% endif %}</td>
+          <td>{{ r.get_scope_display }}{% if r.category %}: {{ r.category }}{% elif r.product %}: {{ r.product.sku }}{% endif %}</td>
+          <td class="whitespace-nowrap">{% if r.notify_telegram %}✈️{% endif %} {% if r.notify_email %}✉️{% endif %}</td>
+          <td class="text-right whitespace-nowrap">
+            {% if can_edit %}
+            <form method="post" action="{% url 'dashboard:alert_toggle' r.pk %}" class="inline">{% csrf_token %}<button class="text-xs text-slate-500 hover:underline">{% if r.is_active %}{% translate "disable" %}{% else %}{% translate "enable" %}{% endif %}</button></form>
+            <form method="post" action="{% url 'dashboard:alert_delete' r.pk %}" class="inline ml-2">{% csrf_token %}<button class="text-xs text-red-600 hover:underline">✕</button></form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="5" class="text-center text-slate-400 py-8">{% translate "No rules" %}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+  {% if can_edit %}
+  <section class="card p-5">
+    <h2 class="font-semibold mb-4">{% translate "New rule" %}</h2>
+    <form method="post" class="space-y-3">{% csrf_token %}
+      {% include "dashboard/partials/form_fields.html" %}
+      <button class="btn btn-primary">{% translate "Add" %}</button>
+    </form>
+    <p class="text-xs text-slate-400 mt-4">{% translate "Alerts for the same product are grouped: at most one message per product every 30 minutes." %}</p>
+  </section>
+  {% endif %}
+</div>
+
+<section class="card mt-6">
+  <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800"><h2 class="font-semibold">{% translate "Alert history" %}</h2></div>
+  <div class="overflow-x-auto">
+  <table class="table">
+    <thead><tr><th>{% translate "When" %}</th><th>{% translate "Product" %}</th><th>{% translate "Store" %}</th><th>{% translate "Event" %}</th><th>{% translate "Delivery" %}</th></tr></thead>
+    <tbody>
+    {% for e in events %}
+      <tr>
+        <td class="whitespace-nowrap text-slate-500">{{ e.created_at|date:"d.m H:i" }}</td>
+        <td><a class="hover:underline" href="{% url 'dashboard:product_detail' e.offer.product_id %}">{{ e.offer.product.name|truncatechars:40 }}</a></td>
+        <td>{{ e.offer.store.name }}</td>
+        <td>{{ e.rule.get_kind_display }}</td>
+        <td>{% if e.sent %}<span class="badge badge-green">{{ e.get_channel_display }}</span>{% else %}<span class="badge badge-amber">{% translate "pending" %}</span>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="text-center text-slate-400 py-8">{% translate "No alerts yet" %}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}

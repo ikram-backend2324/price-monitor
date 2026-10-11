@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Settings" %}{% endblock %}
+{% block page_title %}{% translate "Settings" %}{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-2 gap-6">
+  <section class="card p-6">
+    <form method="post" class="space-y-4">{% csrf_token %}
+      <h2 class="font-semibold">{% translate "Organization" %}</h2>
+      {% if current_membership.role == 'owner' %}
+        {% include "dashboard/partials/form_fields.html" %}
+        <p class="text-xs text-slate-400">{% translate "Digest time is in Asia/Tashkent time." %}</p>
+      {% else %}
+        <p class="text-sm text-slate-500">{{ current_org.name }}</p>
+      {% endif %}
+      <h2 class="font-semibold pt-4">{% translate "My language" %}</h2>
+      <select name="language" class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm">
+        {% get_available_languages as LANGUAGES %}
+        {% for code, name in LANGUAGES %}<option value="{{ code }}" {% if code == user.language %}selected{% endif %}>{{ name }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-primary">{% translate "Save" %}</button>
+    </form>
+  </section>
+  <section class="card p-6">
+    <h2 class="font-semibold mb-2">REST API</h2>
+    {% if api_token %}
+      <p class="text-sm text-slate-500 mb-2">{% translate "Your API token:" %}</p>
+      <code class="block text-xs break-all bg-slate-100 dark:bg-slate-800 rounded p-3">{{ api_token.key }}</code>
+      <pre class="text-xs bg-slate-100 dark:bg-slate-800 rounded p-3 mt-3 overflow-x-auto">curl -H "Authorization: Token {{ api_token.key }}" \
+  {{ request.scheme }}://{{ request.get_host }}/api/v1/products/</pre>
+      <a href="/api/docs/" class="text-sm text-indigo-600 hover:underline mt-3 inline-block">{% translate "Open API documentation" %} →</a>
+    {% else %}
+      <p class="text-sm text-slate-500">{% translate "API access is included in the Business plan." %} <a class="text-indigo-600 hover:underline" href="{% url 'dashboard:billing' %}">{% translate "Plans" %}</a></p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

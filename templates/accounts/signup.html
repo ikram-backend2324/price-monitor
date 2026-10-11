@@ -1,0 +1,18 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+{% block title %}{% translate "Sign up" %}{% endblock %}
+{% block card %}
+<h1 class="text-xl font-semibold mb-1">{% translate "Start a free 14-day trial" %}</h1>
+<p class="text-sm text-slate-500 mb-6">{% translate "No card required. Up to 20 competitor links." %}</p>
+<form method="post" class="space-y-4">{% csrf_token %}
+  {% for field in form %}
+  <div>
+    <label class="block text-sm font-medium mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <input id="{{ field.id_for_label }}" name="{{ field.html_name }}" type="{% if field.name == 'password' %}password{% elif field.name == 'email' %}email{% else %}text{% endif %}" value="{% if field.name != 'password' %}{{ field.value|default:'' }}{% endif %}" required class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2">
+    {% if field.errors %}<div class="errorlist">{{ field.errors|join:" " }}</div>{% endif %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-primary w-full justify-center">{% translate "Create account" %}</button>
+</form>
+<p class="text-sm text-slate-500 mt-6 text-center">{% translate "Already have an account?" %} <a class="text-indigo-600 hover:underline" href="{% url 'login' %}">{% translate "Log in" %}</a></p>
+{% endblock %}

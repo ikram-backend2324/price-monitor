@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block body %}
+<div class="min-h-full flex flex-col items-center justify-center px-4 py-12">
+  <a href="/" class="flex items-center gap-2 mb-8">
+    <img src="{% static 'img/favicon.svg' %}" class="h-10 w-10" alt="">
+    <span class="font-bold text-2xl tracking-tight">Price<span class="text-indigo-600">Watch</span></span>
+  </a>
+  <div class="card w-full max-w-md p-6 sm:p-8 shadow-sm">
+    {% if messages %}{% for message in messages %}<div class="mb-4 rounded-lg px-3 py-2 text-sm bg-indigo-50 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200">{{ message }}</div>{% endfor %}{% endif %}
+    {% block card %}{% endblock %}
+  </div>
+  <form action="{% url 'set_language' %}" method="post" class="mt-6 flex gap-2 text-sm">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+    {% get_available_languages as LANGUAGES %}
+    {% for code, name in LANGUAGES %}<button name="language" value="{{ code }}" class="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800">{{ code|upper }}</button>{% endfor %}
+    <button type="button" onclick="toggleTheme()" class="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800">🌓</button>
+  </form>
+</div>
+{% endblock %}

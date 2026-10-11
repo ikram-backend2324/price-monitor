@@ -1,0 +1,45 @@
+{% load i18n pw %}
+<div class="overflow-x-auto">
+<table class="table">
+  <thead>
+    <tr>
+      <th>SKU</th><th>{% translate "Product" %}</th><th class="hidden md:table-cell">{% translate "Category" %}</th>
+      <th class="text-right">{% translate "My price" %}</th><th class="text-right">{% translate "Market min" %}</th>
+      <th class="text-right">{% translate "Diff" %}</th><th class="text-center hidden sm:table-cell">{% translate "Links" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for row in page %}
+    {% with p=row.product %}
+    <tr class="cursor-pointer" onclick="location.href='{% url 'dashboard:product_detail' p.pk %}'">
+      <td class="font-mono text-xs text-slate-500 whitespace-nowrap">{{ p.sku }}</td>
+      <td class="max-w-[18rem]"><div class="truncate font-medium">{{ p.name }}</div></td>
+      <td class="hidden md:table-cell text-slate-500">{{ p.category.name|default:"—" }}</td>
+      <td class="text-right whitespace-nowrap">{{ p.my_price|money }}</td>
+      <td class="text-right whitespace-nowrap">{{ row.market|money }}</td>
+      <td class="text-right whitespace-nowrap">
+        {% if row.diff is None %}<span class="text-slate-400">—</span>
+        {% elif row.diff > 0 %}<span class="badge badge-red">{{ row.diff|pct }}</span>
+        {% else %}<span class="badge badge-green">{{ row.diff|pct }}</span>{% endif %}
+      </td>
+      <td class="text-center hidden sm:table-cell">{{ row.offers }}</td>
+    </tr>
+    {% endwith %}
+  {% empty %}
+    <tr><td colspan="7" class="text-center py-12 text-slate-400">
+      {% translate "No products found." %}
+      {% if can_edit %}<a class="text-indigo-600 hover:underline" href="{% url 'dashboard:import' %}">{% translate "Import from Excel" %}</a>{% endif %}
+    </td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if page.paginator.num_pages > 1 %}
+<div class="flex justify-between items-center px-4 py-3 text-sm border-t border-slate-200 dark:border-slate-800">
+  <span class="text-slate-500">{{ page.start_index }}–{{ page.end_index }} / {{ page.paginator.count }}</span>
+  <div class="flex gap-2">
+    {% if page.has_previous %}<a class="btn btn-ghost" href="?page={{ page.previous_page_number }}&q={{ q }}&filter={{ filter }}&category={{ category }}">←</a>{% endif %}
+    {% if page.has_next %}<a class="btn btn-ghost" href="?page={{ page.next_page_number }}&q={{ q }}&filter={{ filter }}&category={{ category }}">→</a>{% endif %}
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,107 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANG %}
+<html lang="{{ LANG }}" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PriceWatch{% endblock %} · PriceWatch</title>
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <script>
+    try {
+      const t = localStorage.getItem('pw-theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] } } } };</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js" defer></script>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+{% block body %}
+<div class="min-h-full lg:flex">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="hidden lg:flex lg:flex-col w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 fixed lg:static inset-y-0 left-0 z-40">
+    <div class="h-16 flex items-center gap-2 px-5 border-b border-slate-200 dark:border-slate-800">
+      <img src="{% static 'img/favicon.svg' %}" class="h-7 w-7" alt="">
+      <span class="font-bold text-lg tracking-tight">Price<span class="text-indigo-600">Watch</span></span>
+    </div>
+    <nav class="flex-1 p-3 space-y-1 text-sm">
+      {% url 'dashboard:home' as u_home %}{% url 'dashboard:products' as u_products %}{% url 'dashboard:alerts' as u_alerts %}
+      {% url 'dashboard:pricing' as u_pricing %}{% url 'dashboard:import' as u_import %}{% url 'dashboard:health' as u_health %}
+      {% url 'dashboard:billing' as u_billing %}{% url 'dashboard:team' as u_team %}{% url 'dashboard:telegram' as u_tg %}{% url 'dashboard:settings' as u_settings %}
+      {% with p=request.path %}
+      <a href="{{ u_home }}" class="nav-link {% if p == u_home %}active{% endif %}">📊 {% translate "Dashboard" %}</a>
+      <a href="{{ u_products }}" class="nav-link {% if u_products in p %}active{% endif %}">📦 {% translate "Products" %}</a>
+      <a href="{{ u_alerts }}" class="nav-link {% if u_alerts in p %}active{% endif %}">🔔 {% translate "Alerts" %}</a>
+      <a href="{{ u_pricing }}" class="nav-link {% if u_pricing in p %}active{% endif %}">🧮 {% translate "Pricing rules" %}</a>
+      <a href="{{ u_import }}" class="nav-link {% if u_import in p %}active{% endif %}">⬆️ {% translate "Import / export" %}</a>
+      <a href="{{ u_health }}" class="nav-link {% if u_health in p %}active{% endif %}">🩺 {% translate "Scraper health" %}</a>
+      <div class="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800"></div>
+      <a href="{{ u_tg }}" class="nav-link {% if u_tg in p %}active{% endif %}">✈️ Telegram</a>
+      <a href="{{ u_team }}" class="nav-link {% if u_team in p %}active{% endif %}">👥 {% translate "Team" %}</a>
+      <a href="{{ u_billing }}" class="nav-link {% if u_billing in p %}active{% endif %}">💳 {% translate "Plan & limits" %}</a>
+      <a href="{{ u_settings }}" class="nav-link {% if u_settings in p %}active{% endif %}">⚙️ {% translate "Settings" %}</a>
+      {% if user.is_staff %}<a href="{% url 'admin:index' %}" class="nav-link">🛠 {% translate "Admin" %}</a>{% endif %}
+      {% endwith %}
+    </nav>
+    <div class="p-4 text-xs text-slate-500 border-t border-slate-200 dark:border-slate-800">
+      {{ user.email }}
+      <form method="post" action="{% url 'logout' %}" class="mt-2">{% csrf_token %}<button class="text-indigo-600 hover:underline">{% translate "Log out" %}</button></form>
+    </div>
+  </aside>
+  <div id="backdrop" class="hidden fixed inset-0 bg-black/40 z-30 lg:hidden" onclick="toggleNav()"></div>
+
+  <div class="flex-1 min-w-0 flex flex-col">
+    <!-- Top bar -->
+    <header class="h-16 sticky top-0 z-20 flex items-center gap-3 px-4 lg:px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+      <button class="lg:hidden p-2 -ml-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" onclick="toggleNav()" aria-label="Menu">☰</button>
+      <div class="font-semibold truncate">{% block page_title %}{% endblock %}</div>
+      <div class="ml-auto flex items-center gap-2">
+        {% if all_memberships|length > 1 %}
+        <select class="text-sm rounded-lg border-slate-300 dark:bg-slate-800 dark:border-slate-700 py-1" onchange="document.getElementById('org-switch-'+this.value).submit()">
+          {% for m in all_memberships %}<option value="{{ m.organization_id }}" {% if m.organization_id == current_org.id %}selected{% endif %}>{{ m.organization.name }}</option>{% endfor %}
+        </select>
+        {% for m in all_memberships %}<form id="org-switch-{{ m.organization_id }}" method="post" action="{% url 'switch_org' m.organization_id %}" class="hidden">{% csrf_token %}</form>{% endfor %}
+        {% elif current_org %}<span class="hidden sm:inline text-sm text-slate-500">{{ current_org.name }}</span>{% endif %}
+        <form action="{% url 'set_language' %}" method="post" class="flex">{% csrf_token %}
+          <input name="next" type="hidden" value="{{ request.get_full_path }}">
+          <select name="language" class="text-sm rounded-lg border-slate-300 dark:bg-slate-800 dark:border-slate-700 py-1" onchange="this.form.submit()" aria-label="Language">
+            {% get_available_languages as LANGUAGES %}
+            {% for code, name in LANGUAGES %}<option value="{{ code }}" {% if code == LANG %}selected{% endif %}>{{ code|upper }}</option>{% endfor %}
+          </select>
+        </form>
+        <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title="{% translate 'Toggle dark mode' %}">🌓</button>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 lg:p-8 max-w-7xl w-full mx-auto">
+      {% if messages %}
+      <div class="space-y-2 mb-6">
+        {% for message in messages %}
+        <div class="rounded-lg px-4 py-3 text-sm {% if message.tags == 'error' %}bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200{% elif message.tags == 'success' %}bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200{% elif message.tags == 'warning' %}bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200{% else %}bg-indigo-50 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200{% endif %}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
+<script>
+  function toggleTheme() {
+    const dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('pw-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    document.dispatchEvent(new Event('pw-theme'));
+  }
+  function toggleNav() {
+    const s = document.getElementById('sidebar'), b = document.getElementById('backdrop');
+    s.classList.toggle('hidden'); s.classList.toggle('flex'); b.classList.toggle('hidden');
+  }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n pw %}
+{% block title %}{% translate "Dashboard" %}{% endblock %}
+{% block page_title %}{% translate "Dashboard" %}{% endblock %}
+{% block content %}
+{% if subscription and subscription.days_left is not None and subscription.days_left <= 5 %}
+<div class="mb-6 rounded-lg px-4 py-3 text-sm bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+  {% blocktranslate with days=subscription.days_left plan=limits.plan_name %}Your {{ plan }} plan ends in {{ days }} days.{% endblocktranslate %}
+  <a class="underline font-medium" href="{% url 'dashboard:billing' %}">{% translate "Extend" %}</a>
+</div>
+{% endif %}
+
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <a href="{% url 'dashboard:products' %}" class="card p-5 hover:shadow-md transition">
+    <div class="text-sm text-slate-500">{% translate "Products tracked" %}</div>
+    <div class="text-3xl font-bold mt-1">{{ kpi.products }}</div>
+    <div class="text-xs text-slate-400 mt-1">{% blocktranslate with n=kpi.offers %}{{ n }} competitor links{% endblocktranslate %}</div>
+  </a>
+  <a href="{% url 'dashboard:products' %}?filter=expensive" class="card p-5 hover:shadow-md transition">
+    <div class="text-sm text-slate-500">{% translate "I'm more expensive" %}</div>
+    <div class="text-3xl font-bold mt-1 {% if kpi.more_expensive %}text-red-600{% else %}text-emerald-600{% endif %}">{{ kpi.more_expensive }}</div>
+    <div class="text-xs text-slate-400 mt-1">{% translate "than the cheapest competitor" %}</div>
+  </a>
+  <div class="card p-5">
+    <div class="text-sm text-slate-500">{% translate "Changes in 24h" %}</div>
+    <div class="text-3xl font-bold mt-1">{{ kpi.changes_24h }}</div>
+    <div class="text-xs text-slate-400 mt-1">{% translate "competitor price changes" %}</div>
+  </div>
+  <a href="{% url 'dashboard:health' %}" class="card p-5 hover:shadow-md transition">
+    <div class="text-sm text-slate-500">{% translate "Scraper health" %}</div>
+    <div class="text-3xl font-bold mt-1 {% if kpi.healthy_stores < kpi.total_stores %}text-amber-600{% else %}text-emerald-600{% endif %}">{{ kpi.healthy_stores }}/{{ kpi.total_stores }}</div>
+    <div class="text-xs text-slate-400 mt-1">{% translate "stores working normally" %}</div>
+  </a>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6">
+  <section class="card lg:col-span-2">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+      <h2 class="font-semibold">{% translate "Latest price changes" %}</h2>
+      <span class="text-xs text-slate-400">{% translate "auto-refresh every 60 s" %}</span>
+    </div>
+    <div hx-get="{% url 'dashboard:feed' %}" hx-trigger="every 60s" hx-swap="innerHTML">
+      {% include "dashboard/partials/feed.html" %}
+    </div>
+  </section>
+  <section class="card">
+    <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between">
+      <h2 class="font-semibold">{% translate "Recent alerts" %}</h2>
+      <a href="{% url 'dashboard:alerts' %}" class="text-sm text-indigo-600 hover:underline">{% translate "All" %}</a>
+    </div>
+    <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+      {% for e in alerts %}
+      <li class="px-5 py-3 text-sm">
+        <div class="font-medium truncate"><a href="{% url 'dashboard:product_detail' e.offer.product_id %}" class="hover:underline">{{ e.offer.product.name }}</a></div>
+        <div class="text-slate-500 text-xs mt-0.5">{{ e.rule.get_kind_display }} · {{ e.offer.store.name }} · {{ e.created_at|timesince }}</div>
+      </li>
+      {% empty %}
+      <li class="px-5 py-8 text-sm text-slate-400 text-center">{% translate "No alerts yet" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

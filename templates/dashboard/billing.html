@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n pw %}
+{% block title %}{% translate "Plan & limits" %}{% endblock %}
+{% block page_title %}{% translate "Plan & limits" %}{% endblock %}
+{% block content %}
+<section class="card p-6 mb-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <div class="text-sm text-slate-500">{% translate "Current plan" %}</div>
+      <div class="text-2xl font-bold">{{ limits.plan_name }}
+        {% if subscription %}<span class="badge {% if subscription.is_usable %}badge-green{% else %}badge-red{% endif %} align-middle">{{ subscription.get_status_display }}</span>{% endif %}
+      </div>
+      {% if subscription.expires_at %}<div class="text-sm text-slate-500 mt-1">{% translate "Valid until" %} {{ subscription.expires_at|date:"d.m.Y" }} ({{ subscription.days_left }} {% translate "days left" %})</div>{% endif %}
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-3 gap-6 mt-6">
+    <div>
+      <div class="flex justify-between text-sm mb-1"><span>{% translate "Competitor links" %}</span><span>{{ used }} / {{ limits.max_offers }}</span></div>
+      <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-2 rounded-full {% if used >= limits.max_offers %}bg-red-500{% else %}bg-indigo-600{% endif %}" style="width: {{ used|percent_of:limits.max_offers }}%"></div></div>
+    </div>
+    <div>
+      <div class="flex justify-between text-sm mb-1"><span>{% translate "Team members" %}</span><span>{{ members }} / {{ limits.max_members }}</span></div>
+      <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-800"><div class="h-2 rounded-full bg-indigo-600" style="width: {{ members|percent_of:limits.max_members }}%"></div></div>
+    </div>
+    <div class="text-sm">
+      <div>{% translate "Fastest check interval" %}: <b>{{ limits.min_check_interval_minutes }} {% translate "min" %}</b></div>
+      <div>Excel: {% if limits.excel_reports %}✓{% else %}✕{% endif %} · API: {% if limits.api_access %}✓{% else %}✕{% endif %}</div>
+    </div>
+  </div>
+</section>
+
+<div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+  {% for plan in plans %}
+  <div class="card p-5 flex flex-col {% if plan.code == limits.plan_code %}ring-2 ring-indigo-500{% endif %}">
+    <div class="font-semibold text-lg">{{ plan.name }}</div>
+    <div class="text-2xl font-bold mt-2">{% if plan.price_uzs %}{{ plan.price_uzs|money }} <span class="text-sm font-normal text-slate-500">{% translate "UZS / month" %}</span>{% else %}{% translate "Free" %}{% endif %}</div>
+    <ul class="text-sm space-y-1 mt-4 flex-1 text-slate-600 dark:text-slate-300">
+      <li>🔗 {% blocktranslate with n=plan.max_offers %}up to {{ n }} links{% endblocktranslate %}</li>
+      <li>⏱ {% blocktranslate with n=plan.min_check_interval_minutes %}every {{ n }} min{% endblocktranslate %}</li>
+      <li>👥 {% blocktranslate with n=plan.max_members %}{{ n }} team members{% endblocktranslate %}</li>
+      <li>✈️ {% translate "Telegram alerts" %}</li>
+      {% if plan.excel_reports %}<li>📊 {% translate "Excel reports" %}</li>{% endif %}
+      {% if plan.api_access %}<li>🔌 REST API</li>{% endif %}
+      {% if plan.trial_days %}<li>🎁 {% blocktranslate with n=plan.trial_days %}{{ n }}-day trial{% endblocktranslate %}</li>{% endif %}
+    </ul>
+    {% if plan.price_uzs and current_membership.role == 'owner' %}
+    <form method="post" action="{% url 'dashboard:billing_request' %}" class="mt-4 flex gap-2">{% csrf_token %}
+      <input type="hidden" name="plan" value="{{ plan.code }}">
+      <select name="months" class="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 text-sm"><option value="1">1 {% translate "mo" %}</option><option value="3">3 {% translate "mo" %}</option><option value="12">12 {% translate "mo" %}</option></select>
+      <button class="btn btn-primary flex-1 justify-center">{% translate "Request invoice" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{% if payments %}
+<section class="card mt-6 overflow-x-auto">
+  <table class="table">
+    <thead><tr><th>#</th><th>{% translate "Plan" %}</th><th>{% translate "Months" %}</th><th class="text-right">{% translate "Amount" %}</th><th>{% translate "Status" %}</th><th>{% translate "Date" %}</th></tr></thead>
+    <tbody>{% for p in payments %}<tr><td>{{ p.id }}</td><td>{{ p.plan.name }}</td><td>{{ p.months }}</td><td class="text-right">{{ p.amount_uzs|money }}</td><td>{{ p.get_status_display }}</td><td>{{ p.created_at|date:"d.m.Y" }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}
