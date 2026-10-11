@@ -1,0 +1,20 @@
+# Single-container image for a Render.com demo (free web service, 512 MB RAM).
+# Runs Django + Celery worker/beat + demo shop (+ bot if a token is set) in one service.
+# Playwright/Chromium is intentionally NOT installed — too heavy for 512 MB (no Uzum scraping here).
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=10000
+WORKDIR /app
+COPY requirements.txt ./
+COPY demo_shop/requirements.txt ./demo_shop-requirements.txt
+RUN pip install -r requirements.txt -r demo_shop-requirements.txt
+COPY . .
+RUN DJANGO_SETTINGS_MODULE=config.settings SECRET_KEY=build python manage.py collectstatic --noinput -v0 \
+    && chmod +x render/start.sh \
+    && useradd --create-home --uid 1000 app && chown -R app:app /app
+USER app
+EXPOSE 10000
+CMD ["bash", "render/start.sh"]

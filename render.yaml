@@ -1,0 +1,65 @@
+# Render Blueprint — free demo deployment of PriceWatch.
+# Render dashboard → New → Blueprint → pick this repository → Apply.
+# See docs/RENDER.md for details and limitations of the free tier.
+services:
+  - type: web
+    name: pricewatch-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health/
+    autoDeploy: true
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: localhost,127.0.0.1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pricewatch-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: pricewatch-redis
+          property: connectionString
+      - key: DEMO_SHOP_HOSTS
+        value: techbozor=127.0.0.2:8001,megasavdo=127.0.0.3:8001,smartmarket=127.0.0.4:8001
+      - key: DEMO_SHOP_CHANGE_INTERVAL
+        value: "120"
+      - key: DEMO_USER_PASSWORD
+        value: demo12345
+      - key: DEMO_RESET_ON_START
+        value: "0"
+      - key: CELERY_CONCURRENCY
+        value: "4"
+      # Optional — fill in the Render dashboard (never commit secrets):
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_USERNAME
+        sync: false
+      - key: ADMIN_TELEGRAM_CHAT_ID
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+
+  - type: keyvalue
+    name: pricewatch-redis
+    plan: free
+    region: frankfurt
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
+
+databases:
+  - name: pricewatch-db
+    plan: free
+    region: frankfurt
+    databaseName: pricewatch
+    user: pricewatch
