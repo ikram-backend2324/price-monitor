@@ -302,4 +302,21 @@ SENTRY_DSN=
       15 3 * * * cd /opt/pricewatch && ./scripts/backup.sh >> backups/backup.log 2>&1
     Test a restore monthly:  ./scripts/restore_check.sh backups/<file>.sql.gz
  7. Uptime monitoring: UptimeRobot (free) on https://pricewatch.uz/health/
+
+
+------------------------------------------------------------------------------
+ 11. FREE DEMO ON RENDER.COM (full guide: docs\RENDER.md)
+------------------------------------------------------------------------------
+
+ 1. Push the project to GitHub (private repo is fine):
+      git remote add origin https://github.com/<you>/price-monitor.git
+      git push -u origin main
+ 2. https://render.com -> sign in with GitHub
+ 3. New -> Blueprint -> choose the repo -> Apply   (uses render.yaml)
+ 4. Optional: fill DJANGO_SUPERUSER_EMAIL / DJANGO_SUPERUSER_PASSWORD
+    (your admin login) and TELEGRAM_* values when Render asks.
+ 5. After 5-10 minutes open the URL Render shows, log in as
+      demo@pricewatch.local / demo12345
+ Free tier: sleeps after 15 min idle (first visit ~1 min), free database
+ expires after 30 days, no Uzum scraping (needs more RAM than 512 MB).
 ==============================================================================

@@ -85,6 +85,7 @@ The bundled **demo-shop** (3 fake stores, 36 products) changes prices every 90â€
 |---|---|
 | [docs/RUN.md](docs/RUN.md) | Running locally (Windows / Linux / macOS), logs, adding a shop via the admin, troubleshooting |
 | [docs/DATA.md](docs/DATA.md) | Every `.env` variable and how to obtain it (BotFather, Sentry, proxiesâ€¦), what data a client must provide |
+| [docs/RENDER.md](docs/RENDER.md) | Free one-click demo deployment on Render.com |
 | [docs/PRODUCTION.md](docs/PRODUCTION.md) | Server choice, step-by-step deploy, HTTPS, backups, monitoring, scaling, security checklist |
 | [docs/BUSINESS.md](docs/BUSINESS.md) | Pricing, unit economics, sales playbook for Uzbekistan |
 | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | 90-second demo video script |
