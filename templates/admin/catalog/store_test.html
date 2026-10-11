@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<p>Adapter: <b>{{ store.get_adapter_display }}</b>{% if store.requires_browser %} · browser rendering{% endif %}</p>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" class="default" value="Fetch &amp; extract">
+</form>
+{% if error %}
+  <p class="errornote">{{ error }}</p>
+{% endif %}
+{% if result %}
+  <h2>Extracted</h2>
+  <table>
+    <tr><th>Price</th><td>{{ result.price }}</td></tr>
+    <tr><th>Old price</th><td>{{ result.old_price|default:"—" }}</td></tr>
+    <tr><th>In stock</th><td>{{ result.in_stock }}</td></tr>
+    <tr><th>Title</th><td>{{ result.title }}</td></tr>
+    <tr><th>Currency</th><td>{{ result.currency }}</td></tr>
+    <tr><th>HTTP status</th><td>{{ result.http_status }}</td></tr>
+    <tr><th>Raw</th><td><code>{{ result.raw }}</code></td></tr>
+  </table>
+{% endif %}
+{% endblock %}
