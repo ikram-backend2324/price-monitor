@@ -13,9 +13,9 @@ else
 fi
 
 # Optional private admin account (password never in the repo — set it in the Render dashboard).
-if [ -n "${DJANGO_SUPERUSER_EMAIL:-}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD:-}" ]; then
-  python manage.py createsuperuser --noinput >/dev/null 2>&1 && echo "Superuser created" || echo "Superuser exists"
-fi
+# Applied on every start: change the variables in the Render dashboard and the login changes too.
+# Old admin accounts lose admin rights, so only the e-mail from the environment can open /admin/.
+python manage.py ensure_superuser --demote-others
 
 # Demo shop on loopback: three "shops" answer on 127.0.0.2/3/4 (see DEMO_SHOP_HOSTS).
 (cd demo_shop && exec uvicorn main:app --host 0.0.0.0 --port 8001 --log-level warning) &
